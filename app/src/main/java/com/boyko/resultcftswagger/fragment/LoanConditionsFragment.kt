@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.boyko.resultcftswagger.MainActivity
 import com.boyko.resultcftswagger.R
@@ -48,7 +47,7 @@ class LoanConditionsFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-
+        sharedPref = context!!.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
 
     override fun onCreateView(
@@ -84,10 +83,10 @@ class LoanConditionsFragment : Fragment() {
                 }
             }
     }
-    fun getLoanConditions() {
+    private fun getLoanConditions() {
+
         val bearer: String? = sharedPref?.getString(KEY_NAME, null)
         val call = bearer?.let { api.getLoansConditions(MainActivity.ACCEPT, it) }
-
         call?.enqueue(object : Callback<LoanConditions?> {
             override fun onResponse(call: Call<LoanConditions?>, response: Response<LoanConditions?>) {
                 if (response.isSuccessful) {
@@ -104,6 +103,7 @@ class LoanConditionsFragment : Fragment() {
     }
 
     fun getLoansAll() {
+
         val bearer: String? = sharedPref?.getString(KEY_NAME, null)
         val call = bearer?.let { api.getLoansAll(MainActivity.ACCEPT, it) }
         call?.enqueue(object : Callback<List<Loan>> {
@@ -131,7 +131,6 @@ class LoanConditionsFragment : Fragment() {
         })
     }
     private fun login() {
-        sharedPref = context!!.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         editor = sharedPref?.edit()
         val user = LoggedInUser("Andrey253", "ibmIBM")
         val call = api.postLogin(MainActivity.ACCEPT, MainActivity.CONTENTTYPE, user)
@@ -142,10 +141,8 @@ class LoanConditionsFragment : Fragment() {
 
                     val bearer = response.body()
                     Log.e("mytag", "isSuccessful $bearer")
-
-
                     editor?.putString(KEY_NAME, bearer)
-                    editor?.commit()
+                    editor?.apply()
 
                 } else {
                     Log.e("mytag", "No DATA, code = ${response.code()}")
