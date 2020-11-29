@@ -1,4 +1,4 @@
-package com.boyko.resultcftswagger.api.fragment
+package com.boyko.resultcftswagger.fragment
 
 import android.os.Bundle
 import android.util.Log
@@ -10,11 +10,12 @@ import android.widget.Button
 import com.boyko.resultcftswagger.MainActivity
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.api.Client
-import com.boyko.resultcftswagger.api.base.BaseFragment
-import com.boyko.resultcftswagger.api.models.LoanConditions
+import com.boyko.resultcftswagger.models.Loan
+import com.boyko.resultcftswagger.models.LoanConditions
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlinx.android.synthetic.main.fragment_loan_conditions.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,6 +31,7 @@ class LoanConditionsFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private val api = Client.apiService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,13 +46,12 @@ class LoanConditionsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val rootview = inflater.inflate(R.layout.fragment_loan_conditions, container, false)
-        val btn_get_loan = rootview.findViewById<Button>(R.id.button_send)
-        btn_get_loan.setOnClickListener {getloan()}
-        return rootview
+        return inflater.inflate(R.layout.fragment_loan_conditions, container, false)
     }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        btn_get_loan.setOnClickListener {getloan()}
+        btn_get_loan_all.setOnClickListener {getLoansAll()}
     }
 
     companion object {
@@ -74,8 +75,6 @@ class LoanConditionsFragment : Fragment() {
     }
     fun getloan() {
         //val user = LoggedInUser("Andrey253", "ibmIBM")
-
-        val api = Client.apiService
         val call = api.getLoansConditions(MainActivity.ACCEPT, MainActivity.BEARER)
 
         call.enqueue(object : Callback<LoanConditions?> {
@@ -87,11 +86,28 @@ class LoanConditionsFragment : Fragment() {
                     Log.e("mytag", "No DATA, code = ${response.code()}")
                 }
             }
-
             override fun onFailure(call: Call<LoanConditions?>, t: Throwable) {
                 Log.e("mytag", "onFailure $t")
             }
         })
     }
 
+    fun getLoansAll() {
+        //val user = LoggedInUser("Andrey253", "ibmIBM")
+        val call = api.getLoansAll(MainActivity.ACCEPT, MainActivity.BEARER)
+
+        call.enqueue(object : Callback<List<Loan>> {
+            override fun onResponse(call: Call<List<Loan>?>, response: Response<List<Loan>?>) {
+                if (response.isSuccessful) {
+                    val loancond = response.body()
+                    Log.e("mytag", "isSuccessful $loancond")
+                } else {
+                    Log.e("mytag", "No DATA, code = ${response.code()}")
+                }
+            }
+            override fun onFailure(call: Call<List<Loan>?>, t: Throwable) {
+                Log.e("mytag", "onFailure $t")
+            }
+        })
+    }
 }

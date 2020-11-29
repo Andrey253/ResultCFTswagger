@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/contentFrameB">
+    android:id="@+id/id_frag_loan_cond">
 
 
     <LinearLayout
@@ -11,7 +11,7 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/button_send"
+            android:id="@+id/btn_get_loan"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:text="@string/get_money"
@@ -26,6 +26,13 @@
             android:gravity="center"
             android:text="@string/history_loans"
             android:textSize="18sp" />
+        <Button
+            android:id="@+id/btn_get_loan_all"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:text="@string/get_money"
+            android:layout_margin="10dp"
+            android:onClick="get" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package com.boyko.resultcftswagger.api.base
+package com.boyko.resultcftswagger.base
 
 import android.content.Context
 import android.os.Bundle

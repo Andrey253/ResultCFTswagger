@@ -12,9 +12,6 @@ class Client {
 
         private const val ROOT_URL = "http://focusapp-env.eba-xm2atk2z.eu-central-1.elasticbeanstalk.com"
 
-        var gson = GsonBuilder()
-                .setLenient()
-                .create()
         private val retrofitInstance: Retrofit
         get() = Retrofit.Builder()
                 .baseUrl(ROOT_URL)

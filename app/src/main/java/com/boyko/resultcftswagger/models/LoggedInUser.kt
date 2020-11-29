@@ -1,4 +1,4 @@
-package com.boyko.resultcftswagger.api.models
+package com.boyko.resultcftswagger.models
 
 data class LoggedInUser(
 	val name: String,
