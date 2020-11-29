@@ -11,7 +11,7 @@ import retrofit2.http.Header
 
 interface ApiService {
     @POST("/login")
-    fun postLog(
+    fun postLogin(
             @Header ("accept") accept: String,
             @Header ("Content-Type") type: String,
             @Body user: LoggedInUser): Call<String>
@@ -25,4 +25,5 @@ interface ApiService {
     fun getLoansAll(
             @Header ("accept") accept: String,
             @Header ("Authorization") auth: String) : Call<List<Loan>>
+
 }

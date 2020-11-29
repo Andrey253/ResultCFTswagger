@@ -19,8 +19,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object{
-        val BEARER  ="Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBbmRyZXkyNTMiLCJleHAiOjE2MDg5ODcwOTh9.mcYvxzuELfSn_9I8KPzZel1nb5wcYr_d7yHl3ptC0bVf4kAEQVc1O5zKrHLD7ofO3r33xshr--tvrpqMi8fDJQ"
+        //val BEARER  ="Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBbmRyZXkyNTMiLCJleHAiOjE2MDg5ODcwOTh9.mcYvxzuELfSn_9I8KPzZel1nb5wcYr_d7yHl3ptC0bVf4kAEQVc1O5zKrHLD7ofO3r33xshr--tvrpqMi8fDJQ"
         val ACCEPT ="*/*"
+        val CONTENTTYPE ="application/json"
     }
 
 }

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_margin="@dimen/app_margin"
+    style="@style/settingsButtons"
+    android:layout_height="wrap_content">
+
+
+    <TextView
+        android:id="@+id/id_amount"
+        style="@style/normalText"
+        android:layout_width="73dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="4dp"
+
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="id_amount" />
+
+    <TextView
+        android:id="@+id/id_percent"
+        style="@style/smallText"
+        android:layout_width="45dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="72dp"
+
+        app:layout_constraintStart_toStartOf="@id/id_amount"
+        app:layout_constraintTop_toTopOf="@id/id_amount"
+        tools:text="id_percent" />
+
+    <TextView
+        android:id="@+id/id_period"
+        style="@style/smallText"
+        android:layout_width="30dp"
+        android:layout_height="19dp"
+        android:layout_marginStart="132dp"
+
+        app:layout_constraintStart_toStartOf="@id/id_amount"
+        app:layout_constraintTop_toTopOf="@id/id_amount"
+        tools:text="id_period" />
+
+    <TextView
+        android:id="@+id/id_state"
+        style="@style/smallText"
+        android:layout_width="107dp"
+        android:layout_height="17dp"
+        android:layout_marginStart="48dp"
+
+        app:layout_constraintStart_toStartOf="@id/id_period"
+        app:layout_constraintTop_toTopOf="@id/id_period"
+        tools:text="id_state" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

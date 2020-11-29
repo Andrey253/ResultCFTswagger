@@ -13,10 +13,25 @@
         <Button
             android:id="@+id/btn_get_loan"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:text="@string/get_money"
             android:layout_margin="10dp"
-            android:onClick="generations" />
+             />
+
+        <Button
+            android:id="@+id/btn_get_loan_all"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Получить список займов"
+            android:layout_margin="10dp"
+             />
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Логин"
+            android:layout_margin="10dp"
+             />
 
         <TextView
             android:id="@+id/textView"
@@ -26,13 +41,6 @@
             android:gravity="center"
             android:text="@string/history_loans"
             android:textSize="18sp" />
-        <Button
-            android:id="@+id/btn_get_loan_all"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:text="@string/get_money"
-            android:layout_margin="10dp"
-            android:onClick="get" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
