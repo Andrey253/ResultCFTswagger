@@ -1,6 +1,5 @@
 package com.boyko.resultcftswagger.adapter
 
-//import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +7,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.models.Loan
-
 
 class Adapter(var items: List<Loan>, val callback: Callback) : RecyclerView.Adapter<Adapter.MainHolder>() {
 
@@ -42,5 +40,4 @@ class Adapter(var items: List<Loan>, val callback: Callback) : RecyclerView.Adap
     interface Callback {
         fun onItemClicked(item: Loan)
     }
-
 }
