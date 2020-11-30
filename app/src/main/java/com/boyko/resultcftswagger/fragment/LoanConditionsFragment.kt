@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.boyko.resultcftswagger.MainActivity
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.adapter.Adapter
 import com.boyko.resultcftswagger.api.Client
@@ -64,29 +63,10 @@ class LoanConditionsFragment : Fragment() {
         btn_login.setOnClickListener {login()}
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LoanConditionsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            LoanConditionsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
     private fun getLoanConditions() {
 
         val bearer: String? = sharedPref?.getString(KEY_NAME, null)
-        val call = bearer?.let { api.getLoansConditions(MainActivity.ACCEPT, it) }
+        val call = bearer?.let { api.getLoansConditions(ACCEPT, it) }
         call?.enqueue(object : Callback<LoanConditions?> {
             override fun onResponse(call: Call<LoanConditions?>, response: Response<LoanConditions?>) {
                 if (response.isSuccessful) {
@@ -105,7 +85,7 @@ class LoanConditionsFragment : Fragment() {
     fun getLoansAll() {
 
         val bearer: String? = sharedPref?.getString(KEY_NAME, null)
-        val call = bearer?.let { api.getLoansAll(MainActivity.ACCEPT, it) }
+        val call = bearer?.let { api.getLoansAll(ACCEPT, it) }
         call?.enqueue(object : Callback<List<Loan>> {
             override fun onResponse(call: Call<List<Loan>?>, response: Response<List<Loan>?>) {
                 if (response.isSuccessful) {
@@ -133,7 +113,7 @@ class LoanConditionsFragment : Fragment() {
     private fun login() {
         editor = sharedPref?.edit()
         val user = LoggedInUser("Andrey253", "ibmIBM")
-        val call = api.postLogin(MainActivity.ACCEPT, MainActivity.CONTENTTYPE, user)
+        val call = api.postLogin(ACCEPT, CONTENTTYPE, user)
 
         call.enqueue(object : Callback<String?> {
             override fun onResponse(call: Call<String?>, response: Response<String?>) {
@@ -152,5 +132,27 @@ class LoanConditionsFragment : Fragment() {
                 Log.e("mytag", "onFailure $t")
             }
         })
+    }
+
+    companion object {
+        const val ACCEPT ="*/*"
+        const val CONTENTTYPE ="application/json"
+        /**
+         * Use this factory method to create a new instance of
+         * this fragment using the provided parameters.
+         *
+         * @param param1 Parameter 1.
+         * @param param2 Parameter 2.
+         * @return A new instance of fragment LoanConditionsFragment.
+         */
+        // TODO: Rename and change types and number of parameters
+        @JvmStatic
+        fun newInstance(param1: String, param2: String) =
+                LoanConditionsFragment().apply {
+                    arguments = Bundle().apply {
+                        putString(ARG_PARAM1, param1)
+                        putString(ARG_PARAM2, param2)
+                    }
+                }
     }
 }
