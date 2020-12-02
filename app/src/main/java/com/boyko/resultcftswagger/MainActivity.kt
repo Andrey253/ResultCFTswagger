@@ -4,10 +4,13 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.boyko.resultcftswagger.api.Client
-import com.boyko.resultcftswagger.models.Loan
 import com.boyko.resultcftswagger.models.LoggedInUser
 import com.boyko.resultcftswagger.ui.LoansFragment
 import com.boyko.resultcftswagger.ui.LoginFragment
@@ -21,11 +24,12 @@ private const val PREFS_NAME = "Bearer"
 private const val KEY_NAME = "Bearer"
 private const val TAG = "mytag"
 
-class MainActivity : AppCompatActivity(), LoginFragment.onClickFragmentListener {
-    override fun clicked() {
-
-        login(editText_username.text.toString(), editText_password.text.toString())
-    }
+class MainActivity : AppCompatActivity(){
+//        , LoginFragment.onClickFragmentListener {
+//    override fun clicked() {
+//        Log.e("mytag", "editText_username  $editText_username")
+//        login(editText_username.text.toString(), editText_password.text.toString())
+//    }
 
     val api = Client.apiService
     lateinit var mLoginFragment: LoginFragment
@@ -41,21 +45,11 @@ class MainActivity : AppCompatActivity(), LoginFragment.onClickFragmentListener 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        initFragment()
         val sharedPref = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-
+            showLoginFragment()
         if (sharedPref.contains(KEY_NAME)){
-            getLoansAll()
-        } else{
-            initFragment()
-            showFirstFragment()
-
-            tvFirst?.setOnClickListener {
-                firstSelected()
-                showFirstFragment() }
-
-            tvSecond?.setOnClickListener {
-                secondSelected()
-                showSecondFragment() }
+            showLoansFragment()
         }
     }
 
@@ -72,19 +66,19 @@ class MainActivity : AppCompatActivity(), LoginFragment.onClickFragmentListener 
     }
 
     private fun initFragment() {
-        mLoginFragment=LoginFragment().apply { listener=this@MainActivity }
+        mLoginFragment=LoginFragment()//.apply { listener=this@MainActivity }
         mRegisterFragment= RegisterFragment()
-        mLoans = LoansFragment()
+        mLoans = LoansFragment.newInstance("","")
     }
 
-    private fun showFirstFragment() {
+    private fun showLoginFragment() {
         supportFragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.left_in, R.anim.left_out)
                 .replace(R.id.main_container, mLoginFragment, LoginFragment::class.java.name)
                 .commit()
         firstSelected()
     }
-    private fun showSecondFragment(){
+    private fun showRegFragment(){
         supportFragmentManager.beginTransaction()
                 .addToBackStack(null)
                 .setCustomAnimations(R.anim.right_in, R.anim.right_out, R.anim.left_in, R.anim.left_out)
@@ -94,9 +88,10 @@ class MainActivity : AppCompatActivity(), LoginFragment.onClickFragmentListener 
     }
 
     override fun onBackPressed() {
-        if(!tvFirstIsCheck) {
-            firstSelected()
-            tvFirstIsCheck=true
+        val fragment = supportFragmentManager.findFragmentById(R.id.main_container)
+        if (fragment is LoansFragment) {
+            finish()
+            return
         }
         super.onBackPressed()
     }
@@ -115,7 +110,7 @@ class MainActivity : AppCompatActivity(), LoginFragment.onClickFragmentListener 
                     editor = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit()
                     editor?.putString(KEY_NAME, bearer)
                     editor?.apply()
-                    getLoansAll()
+                    showLoansFragment()
                 } else {
                     Log.e("mytag", "No DATA, code = ${response.code()}")
                 }
@@ -126,30 +121,37 @@ class MainActivity : AppCompatActivity(), LoginFragment.onClickFragmentListener 
             }
         })
     }
-    fun getLoansAll() {
-
-        val sharedPref = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val bearer = sharedPref.getString(KEY_NAME, null)
-        val call = bearer?.let { api.getLoansAll(LoansFragment.ACCEPT, it) }
-        call?.enqueue(object : Callback<List<Loan>> {
-            override fun onResponse(call: Call<List<Loan>?>, response: Response<List<Loan>?>) {
-                if (response.isSuccessful) {
-                    val loansAll = response.body()
-                    Log.e("mytag", "isSuccessful $loansAll")
-
-
+    fun showLoansFragment() {
                     supportFragmentManager.beginTransaction()
                             .addToBackStack(null)
-                            .replace(R.id.main_container, mLoans, LoginFragment::class.java.name)
+                            .setCustomAnimations(R.anim.left_in, R.anim.left_out)
+                            .replace(R.id.main_container, mLoans, LoansFragment::class.java.name)
                             .commit()
-
-                } else {
-                    Log.e("mytag", "No DATA, code = ${response.code()}")
-                }
-            }
-            override fun onFailure(call: Call<List<Loan>?>, t: Throwable) {
-                Log.e("mytag", "onFailure $t")
-            }
-        })
     }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        when (item.itemId) {
+            R.id.action_settings -> logout()
+
+        }
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+    fun logout() {
+        var sharedPref = applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        sharedPref?.let {
+            it.edit().clear().commit() }
+        onBackPressed()
+    }
+
+
 }

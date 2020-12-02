@@ -14,8 +14,7 @@ import com.boyko.resultcftswagger.adapter.Adapter
 import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.models.Loan
 import com.boyko.resultcftswagger.models.LoanConditions
-import com.boyko.resultcftswagger.models.LoggedInUser
-import kotlinx.android.synthetic.main.loan_conditions_fragment.*
+import kotlinx.android.synthetic.main.loans_fragment.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -54,14 +53,12 @@ class LoansFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.loan_conditions_fragment, container, false)
+        return inflater.inflate(R.layout.loans_fragment, container, false)
     }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         btn_get_loan.setOnClickListener {getLoanConditions()}
         btn_get_loan_all.setOnClickListener {getLoansAll()}
-        btn_login.setOnClickListener {login()}
-        btn_logout.setOnClickListener {logout()}
         getLoansAll()
     }
 
@@ -87,10 +84,11 @@ class LoansFragment : Fragment() {
 
     fun getLoansAll() {
 
-        val bearer: String? = sharedPref?.getString(KEY_NAME, null)
+        var bearer: String? = sharedPref?.getString(KEY_NAME, null)
         bearer?.let {
             progressBar.setVisibility(View.VISIBLE)
             val call = api.getLoansAll(ACCEPT, it)
+            bearer = null
             call.enqueue(object : Callback<List<Loan>> {
                 override fun onResponse(call: Call<List<Loan>?>, response: Response<List<Loan>?>) {
                     if (response.isSuccessful) {
@@ -118,34 +116,6 @@ class LoansFragment : Fragment() {
             })
         }
 
-    }
-    private fun login() {
-        editor = sharedPref?.edit()
-        val user = LoggedInUser("Andrey253", "ibmIBM")
-        val call = api.postLogin(ACCEPT, CONTENTTYPE, user)
-
-        call.enqueue(object : Callback<String?> {
-            override fun onResponse(call: Call<String?>, response: Response<String?>) {
-                if (response.isSuccessful) {
-
-                    val bearer = response.body()
-                    Log.e("mytag", "isSuccessful $bearer")
-                    editor?.putString(KEY_NAME, bearer)
-                    editor?.apply()
-
-                } else {
-                    Log.e("mytag", "No DATA, code = ${response.code()}")
-                }
-            }
-
-            override fun onFailure(call: Call<String?>, t: Throwable) {
-                Log.e("mytag", "onFailure $t")
-            }
-        })
-    }
-    fun logout() {
-        sharedPref?.let {
-            it.edit().clear().commit() }
     }
 
     companion object {
