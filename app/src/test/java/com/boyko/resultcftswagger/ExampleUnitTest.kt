@@ -1,5 +1,6 @@
 package com.boyko.resultcftswagger
 
+import android.os.Bundle
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -11,7 +12,10 @@ import org.junit.Assert.*
  */
 class ExampleUnitTest {
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    fun sharePref_not_null() {
+
+
+        assertEquals(1, 1)
     }
 }
+

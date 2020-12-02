@@ -1,4 +1,4 @@
-package com.example.minh98.fragmentaddreplaceanimation
+package com.boyko.resultcftswagger.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +12,7 @@ import com.boyko.resultcftswagger.R
  */
 class SecondFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view:View= inflater!!.inflate(R.layout.registr_fragment,container,false)
+        val view:View= inflater.inflate(R.layout.registr_fragment,container,false)
         return view
     }
 }

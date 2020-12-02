@@ -17,18 +17,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="12dp" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="login"
-        android:background="#FFEB3B"
-        android:textColor="#607D8B"
-        android:layout_below="@+id/idpassword"
-        android:layout_centerHorizontal="true"/>
-
     <EditText
-        android:id="@+id/idusername"
+        android:id="@+id/editText_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView"
@@ -45,10 +35,10 @@
         android:hint="user name" />
 
     <EditText
-        android:id="@+id/idpassword"
+        android:id="@+id/editText_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/idusername"
+        android:layout_below="@+id/editText_username"
         android:layout_marginTop="8dp"
         android:ems="10"
         android:background="@drawable/bg_edit"
@@ -60,7 +50,17 @@
         android:textColorHint="#CFD8DC"
         android:textColor="#8bc34a"
         android:drawableLeft="@drawable/img_matkhau"
-        android:layout_alignLeft="@+id/idusername"
-        android:layout_alignStart="@+id/idusername" />
+        android:layout_alignLeft="@+id/editText_username"
+        android:layout_alignStart="@+id/editText_username" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="login"
+        android:background="#FFEB3B"
+        android:textColor="#607D8B"
+        android:layout_below="@+id/editText_password"
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

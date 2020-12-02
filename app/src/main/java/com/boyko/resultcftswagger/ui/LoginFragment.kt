@@ -1,4 +1,4 @@
-package com.example.minh98.fragmentaddreplaceanimation
+package com.boyko.resultcftswagger.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +12,7 @@ import com.boyko.resultcftswagger.R
 /**
  * Created by minh98 on 17/08/2017.
  */
-class FirstFragment : Fragment() {
+class LoginFragment : Fragment() {
     var listener:onClickFragmentListener?=null
     set(value) {field=value}
 

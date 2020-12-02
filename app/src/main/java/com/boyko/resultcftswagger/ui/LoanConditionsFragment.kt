@@ -1,4 +1,4 @@
-package com.boyko.resultcftswagger.fragment
+package com.boyko.resultcftswagger.ui
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -8,6 +8,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import androidx.core.view.isGone
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.adapter.Adapter
@@ -15,10 +19,10 @@ import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.models.Loan
 import com.boyko.resultcftswagger.models.LoanConditions
 import com.boyko.resultcftswagger.models.LoggedInUser
+import kotlinx.android.synthetic.main.loan_conditions_fragment.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlinx.android.synthetic.main.fragment_loan_conditions.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -54,13 +58,14 @@ class LoanConditionsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_loan_conditions, container, false)
+        return inflater.inflate(R.layout.loan_conditions_fragment, container, false)
     }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         btn_get_loan.setOnClickListener {getLoanConditions()}
         btn_get_loan_all.setOnClickListener {getLoansAll()}
         btn_login.setOnClickListener {login()}
+        getLoansAll()
     }
 
     private fun getLoanConditions() {
@@ -84,11 +89,13 @@ class LoanConditionsFragment : Fragment() {
 
     fun getLoansAll() {
 
+        progressBar.setVisibility(View.VISIBLE)
         val bearer: String? = sharedPref?.getString(KEY_NAME, null)
         val call = bearer?.let { api.getLoansAll(ACCEPT, it) }
         call?.enqueue(object : Callback<List<Loan>> {
             override fun onResponse(call: Call<List<Loan>?>, response: Response<List<Loan>?>) {
                 if (response.isSuccessful) {
+                    progressBar.setVisibility(View.INVISIBLE)
                     val loansAll = response.body()
                     Log.e("mytag", "isSuccessful $loansAll")
 
