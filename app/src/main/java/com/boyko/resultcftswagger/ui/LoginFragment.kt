@@ -18,7 +18,7 @@ class LoginFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view:View=inflater.inflate(R.layout.login_fragment,container,false)
-        val btnNextFragment: Button =view.findViewById(R.id.button)
+        val btnNextFragment: Button =view.findViewById(R.id.btn_login)
         btnNextFragment.setOnClickListener{
             listener?.clicked()
         }

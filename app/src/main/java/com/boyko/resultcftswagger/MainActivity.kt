@@ -9,9 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.models.Loan
 import com.boyko.resultcftswagger.models.LoggedInUser
-import com.boyko.resultcftswagger.ui.LoanConditionsFragment
+import com.boyko.resultcftswagger.ui.LoansFragment
 import com.boyko.resultcftswagger.ui.LoginFragment
-import com.boyko.resultcftswagger.ui.SecondFragment
+import com.boyko.resultcftswagger.ui.RegisterFragment
 import kotlinx.android.synthetic.main.login_fragment.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,7 +29,8 @@ class MainActivity : AppCompatActivity(), LoginFragment.onClickFragmentListener 
 
     val api = Client.apiService
     lateinit var mLoginFragment: LoginFragment
-    lateinit var mSecondFragment: SecondFragment
+    lateinit var mRegisterFragment: RegisterFragment
+    lateinit var mLoans: LoansFragment
     var editor: SharedPreferences.Editor? = null
     var tvFirst:TextView?=null
     var tvSecond:TextView?=null
@@ -72,7 +73,8 @@ class MainActivity : AppCompatActivity(), LoginFragment.onClickFragmentListener 
 
     private fun initFragment() {
         mLoginFragment=LoginFragment().apply { listener=this@MainActivity }
-        mSecondFragment= SecondFragment()
+        mRegisterFragment= RegisterFragment()
+        mLoans = LoansFragment()
     }
 
     private fun showFirstFragment() {
@@ -86,7 +88,7 @@ class MainActivity : AppCompatActivity(), LoginFragment.onClickFragmentListener 
         supportFragmentManager.beginTransaction()
                 .addToBackStack(null)
                 .setCustomAnimations(R.anim.right_in, R.anim.right_out, R.anim.left_in, R.anim.left_out)
-                .replace(R.id.main_container, mSecondFragment, SecondFragment::class.java.name)
+                .replace(R.id.main_container, mRegisterFragment, RegisterFragment::class.java.name)
                 .commit()
         secondSelected()
     }
@@ -102,7 +104,7 @@ class MainActivity : AppCompatActivity(), LoginFragment.onClickFragmentListener 
 
         val user = LoggedInUser(username, password)
         Log.e("mytag", "LoggedInUser  $user")
-        val call = api.postLogin(LoanConditionsFragment.ACCEPT, LoanConditionsFragment.CONTENTTYPE, user)
+        val call = api.postLogin(LoansFragment.ACCEPT, LoansFragment.CONTENTTYPE, user)
 
         call.enqueue(object : Callback<String?> {
             override fun onResponse(call: Call<String?>, response: Response<String?>) {
@@ -128,16 +130,17 @@ class MainActivity : AppCompatActivity(), LoginFragment.onClickFragmentListener 
 
         val sharedPref = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val bearer = sharedPref.getString(KEY_NAME, null)
-        val call = bearer?.let { api.getLoansAll(LoanConditionsFragment.ACCEPT, it) }
+        val call = bearer?.let { api.getLoansAll(LoansFragment.ACCEPT, it) }
         call?.enqueue(object : Callback<List<Loan>> {
             override fun onResponse(call: Call<List<Loan>?>, response: Response<List<Loan>?>) {
                 if (response.isSuccessful) {
                     val loansAll = response.body()
                     Log.e("mytag", "isSuccessful $loansAll")
 
-                    var m = LoanConditionsFragment()
+
                     supportFragmentManager.beginTransaction()
-                            .replace(R.id.main_container, m, LoginFragment::class.java.name)
+                            .addToBackStack(null)
+                            .replace(R.id.main_container, mLoans, LoginFragment::class.java.name)
                             .commit()
 
                 } else {

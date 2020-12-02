@@ -4,14 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
-import androidx.core.view.isGone
-import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.adapter.Adapter
@@ -36,7 +32,7 @@ private const val KEY_NAME = "Bearer"
  * Use the [LoanConditionsFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class LoanConditionsFragment : Fragment() {
+class LoansFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -54,8 +50,8 @@ class LoanConditionsFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.loan_conditions_fragment, container, false)
@@ -65,6 +61,7 @@ class LoanConditionsFragment : Fragment() {
         btn_get_loan.setOnClickListener {getLoanConditions()}
         btn_get_loan_all.setOnClickListener {getLoansAll()}
         btn_login.setOnClickListener {login()}
+        btn_logout.setOnClickListener {logout()}
         getLoansAll()
     }
 
@@ -81,6 +78,7 @@ class LoanConditionsFragment : Fragment() {
                     Log.e("mytag", "No DATA, code = ${response.code()}")
                 }
             }
+
             override fun onFailure(call: Call<LoanConditions?>, t: Throwable) {
                 Log.e("mytag", "onFailure $t")
             }
@@ -89,33 +87,37 @@ class LoanConditionsFragment : Fragment() {
 
     fun getLoansAll() {
 
-        progressBar.setVisibility(View.VISIBLE)
         val bearer: String? = sharedPref?.getString(KEY_NAME, null)
-        val call = bearer?.let { api.getLoansAll(ACCEPT, it) }
-        call?.enqueue(object : Callback<List<Loan>> {
-            override fun onResponse(call: Call<List<Loan>?>, response: Response<List<Loan>?>) {
-                if (response.isSuccessful) {
-                    progressBar.setVisibility(View.INVISIBLE)
-                    val loansAll = response.body()
-                    Log.e("mytag", "isSuccessful $loansAll")
+        bearer?.let {
+            progressBar.setVisibility(View.VISIBLE)
+            val call = api.getLoansAll(ACCEPT, it)
+            call.enqueue(object : Callback<List<Loan>> {
+                override fun onResponse(call: Call<List<Loan>?>, response: Response<List<Loan>?>) {
+                    if (response.isSuccessful) {
+                        progressBar.setVisibility(View.INVISIBLE)
+                        val loansAll = response.body()
+                        Log.e("mytag", "isSuccessful $loansAll")
 
-                    recyclerview.layoutManager = LinearLayoutManager(context)
-                    val myAdapter = loansAll?.let {
-                        Adapter(it, object : Adapter.Callback {
-                            override fun onItemClicked(item: Loan) {
-                                //TODO Сюда придёт элемент, по которому кликнули. Можно дальше с ним работать
-                            }
-                        })
+                        recyclerview.layoutManager = LinearLayoutManager(context)
+                        val myAdapter = loansAll?.let {
+                            Adapter(it, object : Adapter.Callback {
+                                override fun onItemClicked(item: Loan) {
+                                    //TODO Сюда придёт элемент, по которому кликнули. Можно дальше с ним работать
+                                }
+                            })
+                        }
+                        recyclerview.adapter = myAdapter
+                    } else {
+                        Log.e("mytag", "No DATA, code = ${response.code()}")
                     }
-                    recyclerview.adapter = myAdapter
-                } else {
-                    Log.e("mytag", "No DATA, code = ${response.code()}")
                 }
-            }
-            override fun onFailure(call: Call<List<Loan>?>, t: Throwable) {
-                Log.e("mytag", "onFailure $t")
-            }
-        })
+
+                override fun onFailure(call: Call<List<Loan>?>, t: Throwable) {
+                    Log.e("mytag", "onFailure $t")
+                }
+            })
+        }
+
     }
     private fun login() {
         editor = sharedPref?.edit()
@@ -135,10 +137,15 @@ class LoanConditionsFragment : Fragment() {
                     Log.e("mytag", "No DATA, code = ${response.code()}")
                 }
             }
+
             override fun onFailure(call: Call<String?>, t: Throwable) {
                 Log.e("mytag", "onFailure $t")
             }
         })
+    }
+    fun logout() {
+        sharedPref?.let {
+            it.edit().clear().commit() }
     }
 
     companion object {
@@ -155,7 +162,7 @@ class LoanConditionsFragment : Fragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-                LoanConditionsFragment().apply {
+                LoansFragment().apply {
                     arguments = Bundle().apply {
                         putString(ARG_PARAM1, param1)
                         putString(ARG_PARAM2, param2)
