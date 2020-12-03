@@ -14,6 +14,8 @@ import com.boyko.resultcftswagger.adapter.Adapter
 import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.models.Loan
 import com.boyko.resultcftswagger.models.LoanConditions
+import com.google.gson.Gson
+import com.google.gson.stream.JsonReader
 import kotlinx.android.synthetic.main.loans_fragment.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -37,7 +39,7 @@ class LoansFragment : Fragment() {
     private var param2: String? = null
     private val api = Client.apiService
     private var sharedPref: SharedPreferences? = null
-    private var editor: SharedPreferences.Editor? = null
+    lateinit var mLoanItemFragment: LoanItemFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,6 +103,9 @@ class LoansFragment : Fragment() {
                             Adapter(it, object : Adapter.Callback {
                                 override fun onItemClicked(item: Loan) {
                                     //TODO Сюда придёт элемент, по которому кликнули. Можно дальше с ним работать
+                                    Log.e("mytag", "Элемент списка = $item")
+                                    mLoanItemFragment = LoanItemFragment.newInstance(Gson().toJson(item),"")
+                                    showLoansFragment(mLoanItemFragment)
                                 }
                             })
                         }
@@ -115,7 +120,13 @@ class LoansFragment : Fragment() {
                 }
             })
         }
-
+    }
+    fun showLoansFragment(fragment: Fragment) {
+        fragmentManager?.beginTransaction()
+                ?.addToBackStack(null)
+                ?.setCustomAnimations(R.anim.left_in, R.anim.left_out)
+                ?.replace(R.id.main_container, fragment, LoansFragment::class.java.name)
+                ?.commit()
     }
 
     companion object {
