@@ -14,6 +14,8 @@ import com.boyko.resultcftswagger.adapter.Adapter
 import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.models.Loan
 import com.boyko.resultcftswagger.models.LoanConditions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.stream.JsonReader
 import kotlinx.android.synthetic.main.loans_fragment.*
@@ -40,6 +42,7 @@ class LoansFragment : Fragment() {
     private val api = Client.apiService
     private var sharedPref: SharedPreferences? = null
     lateinit var mLoanItemFragment: LoanItemFragment
+    lateinit var mCreateNewLoanFragment: CreateNewLoanFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,29 +62,14 @@ class LoansFragment : Fragment() {
     }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        btn_get_loan.setOnClickListener {getLoanConditions()}
+        btn_get_loan.setOnClickListener {requestLoanConditions(CreateNewLoanFragment())}
         btn_get_loan_all.setOnClickListener {getLoansAll()}
+
+        fab.setOnClickListener { view ->
+            getLoansAll()
+        }
+
         getLoansAll()
-    }
-
-    private fun getLoanConditions() {
-
-        val bearer: String? = sharedPref?.getString(KEY_NAME, null)
-        val call = bearer?.let { api.getLoansConditions(ACCEPT, it) }
-        call?.enqueue(object : Callback<LoanConditions?> {
-            override fun onResponse(call: Call<LoanConditions?>, response: Response<LoanConditions?>) {
-                if (response.isSuccessful) {
-                    val loancond = response.body()
-                    Log.e("mytag", "isSuccessful $loancond")
-                } else {
-                    Log.e("mytag", "No DATA, code = ${response.code()}")
-                }
-            }
-
-            override fun onFailure(call: Call<LoanConditions?>, t: Throwable) {
-                Log.e("mytag", "onFailure $t")
-            }
-        })
     }
 
     fun getLoansAll() {
@@ -121,12 +109,20 @@ class LoansFragment : Fragment() {
             })
         }
     }
+
     fun showLoansFragment(fragment: Fragment) {
         fragmentManager?.beginTransaction()
                 ?.addToBackStack(null)
                 ?.setCustomAnimations(R.anim.left_in, R.anim.left_out)
-                ?.replace(R.id.main_container, fragment, LoansFragment::class.java.name)
+                ?.replace(R.id.main_container, fragment)
                 ?.commit()
+    }
+    private fun requestLoanConditions(fragment: Fragment){
+        fragmentManager?.beginTransaction()
+            ?.addToBackStack(null)
+            ?.setCustomAnimations(R.anim.right_in, R.anim.right_out, R.anim.left_in, R.anim.left_out)
+            ?.replace(R.id.main_container, fragment)
+            ?.commit()
     }
 
     companion object {

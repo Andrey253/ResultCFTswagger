@@ -1,5 +1,6 @@
 package com.boyko.resultcftswagger.ui
 
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -22,6 +23,9 @@ import java.util.*
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+private const val APPROVED = "APPROVED"
+private const val REJECTED = "REJECTED"
+private const val REGISTERED = "REGISTERED"
 
 /**
  * A simple [Fragment] subclass.
@@ -51,10 +55,10 @@ class LoanItemFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        set_field_item_loan()
+        setFieldItemLoanFragment()
     }
 
-    private fun set_field_item_loan() {
+    private fun setFieldItemLoanFragment() {
         tv_item_id.text = loan?.let { dataTostring(it) }
         tv_item_name.text = "${loan?.firstName} ${loan?.lastName} "
         tv_item_phone.text = loan?.phoneNumber
@@ -62,6 +66,19 @@ class LoanItemFragment : Fragment() {
         tv_item_amount.text = loan?.amount.toString()
         tv_item_percent.text = loan?.percent.toString()
         tv_item_period.text = loan?.period.toString()
+        setColorStatus(loan?.state)
+    }
+
+    private fun setColorStatus(state: String?) {
+        when(state){
+            REGISTERED ->   {   tv_item_state.setBackgroundColor(Color.CYAN)
+                                tv_item_state1.setBackgroundColor(Color.CYAN)}
+            APPROVED ->     {   tv_item_state.setBackgroundColor(Color.GREEN)
+                                tv_item_state1.setBackgroundColor(Color.GREEN)}
+            REJECTED ->     {   tv_item_state.setBackgroundColor(Color.RED)
+                                tv_item_state1.setBackgroundColor(Color.RED)}
+
+        }
     }
 
     private fun dataTostring(loan: Loan): CharSequence? {

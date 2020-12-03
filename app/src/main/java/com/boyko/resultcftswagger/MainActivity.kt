@@ -12,9 +12,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.models.LoggedInUser
+import com.boyko.resultcftswagger.ui.CreateNewLoanFragment
 import com.boyko.resultcftswagger.ui.LoansFragment
 import com.boyko.resultcftswagger.ui.LoginFragment
 import com.boyko.resultcftswagger.ui.RegisterFragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.loans_fragment.*
 import kotlinx.android.synthetic.main.login_fragment.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -51,6 +55,7 @@ class MainActivity : AppCompatActivity(){
         if (sharedPref.contains(KEY_NAME)){
             showLoansFragment()
         }
+
     }
 
     private fun firstSelected(){
@@ -78,14 +83,6 @@ class MainActivity : AppCompatActivity(){
                 .commit()
         firstSelected()
     }
-    private fun showRegFragment(){
-        supportFragmentManager.beginTransaction()
-                .addToBackStack(null)
-                .setCustomAnimations(R.anim.right_in, R.anim.right_out, R.anim.left_in, R.anim.left_out)
-                .replace(R.id.main_container, mRegisterFragment, RegisterFragment::class.java.name)
-                .commit()
-        secondSelected()
-    }
 
     override fun onBackPressed() {
         val fragment = supportFragmentManager.findFragmentById(R.id.main_container)
@@ -95,38 +92,20 @@ class MainActivity : AppCompatActivity(){
         }
         super.onBackPressed()
     }
-    private fun login(username: String, password: String) {
 
-        val user = LoggedInUser(username, password)
-        Log.e("mytag", "LoggedInUser  $user")
-        val call = api.postLogin(LoansFragment.ACCEPT, LoansFragment.CONTENTTYPE, user)
-
-        call.enqueue(object : Callback<String?> {
-            override fun onResponse(call: Call<String?>, response: Response<String?>) {
-                if (response.isSuccessful) {
-
-                    val bearer = response.body()
-                    Log.e("mytag", "isSuccessful $bearer")
-                    editor = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit()
-                    editor?.putString(KEY_NAME, bearer)
-                    editor?.apply()
-                    showLoansFragment()
-                } else {
-                    Log.e("mytag", "No DATA, code = ${response.code()}")
-                }
-            }
-
-            override fun onFailure(call: Call<String?>, t: Throwable) {
-                Log.e("mytag", "onFailure $t")
-            }
-        })
-    }
     fun showLoansFragment() {
                     supportFragmentManager.beginTransaction()
                             .addToBackStack(null)
                             .setCustomAnimations(R.anim.left_in, R.anim.left_out)
                             .replace(R.id.main_container, mLoans, LoansFragment::class.java.name)
                             .commit()
+    }
+    fun createNewLoan() {
+        supportFragmentManager.beginTransaction()
+            .addToBackStack(null)
+            .setCustomAnimations(R.anim.left_in, R.anim.left_out)
+            .replace(R.id.main_container, mLoans, CreateNewLoanFragment::class.java.name)
+            .commit()
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
@@ -152,6 +131,4 @@ class MainActivity : AppCompatActivity(){
             it.edit().clear().commit() }
         onBackPressed()
     }
-
-
 }
