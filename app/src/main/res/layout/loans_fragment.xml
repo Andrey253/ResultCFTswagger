@@ -8,22 +8,18 @@
 
 
     <LinearLayout
+        style="@style/Buttons"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        style="@style/Buttons">
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="9dp">
 
         <Button
             android:id="@+id/btn_get_loan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/get_money" />
-
-        <Button
-            android:id="@+id/btn_get_loan_all"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Обновить"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -46,22 +42,23 @@
                 android:visibility="visible" />
         </LinearLayout>
 
-<FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/recyclerview" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
-</FrameLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/fab_margin"
+                app:srcCompat="@android:drawable/ic_dialog_email" />
+        </FrameLayout>
 
     </LinearLayout>
 

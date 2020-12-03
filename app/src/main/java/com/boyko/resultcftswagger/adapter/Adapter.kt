@@ -1,5 +1,6 @@
 package com.boyko.resultcftswagger.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.models.Loan
+import kotlinx.android.synthetic.main.fragment_loan_item.*
+
+private const val APPROVED = "APPROVED"
+private const val REJECTED = "REJECTED"
+private const val REGISTERED = "REGISTERED"
 
 class Adapter(var items: List<Loan>, val callback: Callback) : RecyclerView.Adapter<Adapter.MainHolder>() {
 
@@ -34,6 +40,14 @@ class Adapter(var items: List<Loan>, val callback: Callback) : RecyclerView.Adap
             itemView.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION) callback.onItemClicked(items[adapterPosition])
             }
+            itemView.setBackgroundColor(
+                    when(item.state){
+                        REGISTERED-> Color.CYAN
+                        APPROVED ->  Color.GREEN
+                        REJECTED ->  Color.RED
+                        else -> Color.WHITE
+                    }
+            )
         }
     }
 

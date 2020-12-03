@@ -3,7 +3,6 @@ package com.boyko.resultcftswagger.ui
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,11 +12,6 @@ import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.models.Loan
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_loan_item.*
-import kotlinx.android.synthetic.main.test_item.*
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

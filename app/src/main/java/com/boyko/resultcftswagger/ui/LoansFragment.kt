@@ -63,8 +63,6 @@ class LoansFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         btn_get_loan.setOnClickListener {requestLoanConditions(CreateNewLoanFragment())}
-        btn_get_loan_all.setOnClickListener {getLoansAll()}
-
         fab.setOnClickListener { view ->
             getLoansAll()
         }

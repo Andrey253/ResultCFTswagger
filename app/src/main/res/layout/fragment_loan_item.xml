@@ -14,7 +14,7 @@
         style="@style/bigText"
         android:layout_gravity="fill"
         android:gravity="center"
-        android:text="Условия займа" />
+        android:text="Параметры займа" />
 
     <TextView
         android:id="@+id/tv_item_state1"

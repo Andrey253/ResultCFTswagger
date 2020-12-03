@@ -67,17 +67,10 @@ class CreateNewLoanFragment : Fragment() {
     }
 
     private fun sendLoanRequest() {
-        val loanrequest = LoanRequest(
-            amount = tv_new_amount.text.toString().toInt(),
-            firstName = tv_new_firstname.text.toString(),
-            lastName = tv_new_lastname.text.toString(),
-            percent = tv_new_percent.text.toString().toDouble(),
-            period = tv_new_period.text.toString().toInt(),
-            phoneNumber = tv_new_phone.text.toString())
-        Log.e("mytag", "loanrequest = $loanrequest")
+
 
         val bearer: String? = sharedPref?.getString(KEY_NAME, null)
-        val call = bearer?.let { api.postGetLoans(ACCEPT, bearer,loanrequest) }
+        val call = bearer?.let { api.postGetLoans(ACCEPT, bearer,createLoanRequestObject()) }
         call?.enqueue(object : Callback<Loan?> {
             override fun onResponse(call: Call<Loan?>, response: Response<Loan?>) {
                 if (response.isSuccessful) {
@@ -93,6 +86,16 @@ class CreateNewLoanFragment : Fragment() {
                 Log.e("mytag", "onFailure $t")
             }
         })
+    }
+
+    private fun createLoanRequestObject(): LoanRequest{
+        return LoanRequest(
+                amount = tv_new_amount.text.toString().toInt(),
+                firstName = tv_new_firstname.text.toString(),
+                lastName = tv_new_lastname.text.toString(),
+                percent = tv_new_percent.text.toString().toDouble(),
+                period = tv_new_period.text.toString().toInt(),
+                phoneNumber = tv_new_phone.text.toString())
     }
 
     private fun getLoanConditions() {
