@@ -2,6 +2,7 @@ package com.boyko.resultcftswagger.ui
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +12,11 @@ import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.models.Loan
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_loan_item.*
+import kotlinx.android.synthetic.main.test_item.*
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -28,6 +32,7 @@ class LoanItemFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private var loan: Loan? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,22 +40,39 @@ class LoanItemFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        loan = Gson().fromJson(param1, Loan::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_loan_item, container, false)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var stringdata = Gson().fromJson(param1, Loan::class.java).date
-        var parsedDate = LocalDate.parse("27 July,2019", DateTimeFormatter.ofPattern("dd MMMM,yyyy"))
-        println("27 July,2019 : " + parsedDate)
+        set_field_item_loan()
+    }
 
-        tv_item.text = parsedDate.toString()
+    private fun set_field_item_loan() {
+        tv_item_id.text = loan?.let { dataTostring(it) }
+        tv_item_name.text = "${loan?.firstName} ${loan?.lastName} "
+        tv_item_phone.text = loan?.phoneNumber
+        tv_item_state.text = loan?.state
+        tv_item_amount.text = loan?.amount.toString()
+        tv_item_percent.text = loan?.percent.toString()
+        tv_item_period.text = loan?.period.toString()
+    }
+
+    private fun dataTostring(loan: Loan): CharSequence? {
+        val stringdata: String? = loan.date
+        val list = stringdata?.split("T",":","-")
+        var s = ""
+        list?.let {
+             s = "№ ${loan.id} от ${list.get(2)}.${list.get(1)}.${list.get(0)}" +
+                     "\n${list.get(3)}:${list.get(4)}"
+        }
+        return s
     }
 
     companion object {
