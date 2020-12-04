@@ -5,12 +5,15 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.boyko.resultcftswagger.InternetConnection
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.models.Loan
 import com.boyko.resultcftswagger.models.LoanConditions
 import com.boyko.resultcftswagger.models.LoanRequest
+import com.boyko.resultcftswagger.ui.itemfragment.CreatedNewLoan
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_create_new_loan.*
 import kotlinx.android.synthetic.main.fragment_loan_item.*
@@ -61,8 +64,17 @@ class CreateNewLoan : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         btn_update.setOnClickListener {getLoanConditions()}
-        btn_send.setOnClickListener {sendLoanRequest()}
-        getLoanConditions()
+        btn_send.setOnClickListener{
+            if(InternetConnection.checkConnection(context!!))
+                sendLoanRequest()
+            else
+                Toast.makeText(context, "Отсутствует соединение с сетью", Toast.LENGTH_LONG).show()
+        }
+        if(InternetConnection.checkConnection(context!!))
+            getLoanConditions()
+        else
+            Toast.makeText(context, "Отсутствует соединение с сетью", Toast.LENGTH_LONG).show()
+
     }
 
     private fun sendLoanRequest() {

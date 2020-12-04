@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_gravity="center"
     android:columnCount="2"
     android:padding="@dimen/paddingnormalTextView"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:background="@color/button_background"
     tools:context=".ui.itemfragment.LoanItem">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:columnCount="2"
+            android:padding="@dimen/paddingnormalTextView"
+            android:orientation="horizontal"
+            android:background="@color/button_background">
+
 
     <TextView
         android:id="@+id/tv_item_desc"
@@ -45,7 +57,7 @@
         android:layout_gravity="fill"
         style="@style/normalText"
         android:gravity="left"
-        android:text="Учетный номер займа"/>
+        android:text="Дата"/>
 
     <TextView
         android:id="@+id/tv_item_id"
@@ -140,4 +152,21 @@
         android:layout_gravity="fill"
         android:gravity="left"
         android:text="Период, месяцев" />
-</GridLayout>
+        </GridLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btn_loanitem_to_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/app_margin"
+            android:background="@drawable/bg_button"
+            android:text="На главную страницу"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+</LinearLayout>

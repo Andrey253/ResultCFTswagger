@@ -7,8 +7,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.boyko.resultcftswagger.InternetConnection
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.adapter.Adapter
 import com.boyko.resultcftswagger.api.Client
@@ -49,7 +51,10 @@ class Loans : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
         sharedPref = context!!.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        getLoansAll()
+        if(InternetConnection.checkConnection(context!!))
+            getLoansAll()
+        else
+            Toast.makeText(context, "Отсутствует соединение с сетью", Toast.LENGTH_LONG).show()
     }
 
     override fun onCreateView(
@@ -74,7 +79,9 @@ class Loans : Fragment() {
                         val listL = response.body()
                         listL?.let {
                             listLoan = listL
-                            myAdapter.update(listL) }
+                            myAdapter.update(listL)
+
+                        }
 
                     } else {
                         Log.e("mytag", "No DATA, code = ${response.code()}")
@@ -83,6 +90,7 @@ class Loans : Fragment() {
 
                 override fun onFailure(call: Call<List<Loan>?>, t: Throwable) {
                     Log.e("mytag", "onFailure $t")
+
                 }
             })
         }
@@ -106,7 +114,7 @@ class Loans : Fragment() {
         Log.e("mytag", "fragment ${fragment.javaClass.name}")
         fragmentManager?.beginTransaction()
                 ?.addToBackStack(null)
-                ?.setCustomAnimations(R.anim.left_in, R.anim.left_out)
+                ?.setCustomAnimations(R.anim.right_in, R.anim.right_out)
                 ?.replace(R.id.main_container, fragment, fragment.toString())
                 ?.commit()
     }

@@ -1,21 +1,20 @@
 package com.boyko.resultcftswagger
 
 import android.content.Context
-import android.content.SharedPreferences
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentManager
-import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.ui.*
+import com.boyko.resultcftswagger.ui.itemfragment.CreatedNewLoan
+import com.boyko.resultcftswagger.ui.itemfragment.LoanItem
 
 private const val PREFS_NAME = "Bearer"
 private const val KEY_NAME = "Bearer"
 private const val TAG = "mytag"
-
 class MainActivity : AppCompatActivity(){
 
     lateinit var mLoginFragment: Login
@@ -37,7 +36,6 @@ class MainActivity : AppCompatActivity(){
         if (sharedPref.contains(KEY_NAME))
             showLoansFragment()
         else showLoginFragment()
-
     }
 
     private fun firstSelected(){
@@ -73,6 +71,11 @@ class MainActivity : AppCompatActivity(){
         {
             is Loans -> finish()
             is CreatedNewLoan -> {
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.main_container, mLoans)
+                        .commit()
+            }
+            is LoanItem -> {
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.main_container, mLoans)
                         .commit()

@@ -1,4 +1,4 @@
-package com.boyko.resultcftswagger.ui
+package com.boyko.resultcftswagger.ui.itemfragment
 
 import android.graphics.Color
 import android.os.Build
@@ -11,8 +11,21 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.models.Loan
+import com.boyko.resultcftswagger.ui.CreateNewLoan
+import com.boyko.resultcftswagger.ui.Loans
+import com.boyko.resultcftswagger.ui.Login
+import com.boyko.resultcftswagger.ui.Register
 import com.google.gson.Gson
+import kotlinx.android.synthetic.main.fragment_created_new_loan.*
 import kotlinx.android.synthetic.main.fragment_loan_item.*
+import kotlinx.android.synthetic.main.fragment_loan_item.tv_item_amount
+import kotlinx.android.synthetic.main.fragment_loan_item.tv_item_name
+import kotlinx.android.synthetic.main.fragment_loan_item.tv_item_percent
+import kotlinx.android.synthetic.main.fragment_loan_item.tv_item_period
+import kotlinx.android.synthetic.main.fragment_loan_item.tv_item_phone
+import kotlinx.android.synthetic.main.fragment_loan_item.tv_item_state
+import kotlinx.android.synthetic.main.fragment_loan_item.tv_item_state1
+import kotlinx.android.synthetic.main.loans_fragment.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,9 +42,9 @@ private const val REGISTERED = "REGISTERED"
  */
 class CreatedNewLoan : Fragment() {
     // TODO: Rename and change types of parameters
+    //lateinit var mLoans: Loans
     private var param1: String? = null
     private var param2: String? = null
-    private var itemLoan: Loan? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +52,6 @@ class CreatedNewLoan : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        itemLoan = Gson().fromJson(param1, Loan::class.java)
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -48,20 +59,32 @@ class CreatedNewLoan : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_created_new_loan, container, false)
     }
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        btn_to_main.setOnClickListener { showLoansFragment(Loans()) }
+    }
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setFieldItemLoanFragment()
     }
-
+    fun showLoansFragment(fragment: Fragment) {
+        fragmentManager?.beginTransaction()
+                ?.addToBackStack(null)
+                ?.setCustomAnimations(R.anim.left_in, R.anim.left_out)
+                ?.replace(R.id.main_container, fragment)
+                ?.commit()
+    }
     private fun setFieldItemLoanFragment() {
-        tv_item_name.text = "${itemLoan?.firstName} ${itemLoan?.lastName} "
-        tv_item_phone.text = itemLoan?.phoneNumber
-        tv_item_state.text = itemLoan?.state
-        tv_item_amount.text = itemLoan?.amount.toString()
-        tv_item_percent.text = itemLoan?.percent.toString()
-        tv_item_period.text = itemLoan?.period.toString()
-        setColorStatus(itemLoan?.state)
+
+        var loan = Gson().fromJson(param1, Loan::class.java)
+        tv_item_name.text = "${loan?.firstName} ${loan?.lastName} "
+        tv_item_phone.text = loan?.phoneNumber
+        tv_item_state.text = loan?.state
+        tv_item_amount.text = loan?.amount.toString()
+        tv_item_percent.text = loan?.percent.toString()
+        tv_item_period.text = loan?.period.toString()
+        setColorStatus(loan?.state)
     }
     private fun setColorStatus(state: String?) {
         when(state){

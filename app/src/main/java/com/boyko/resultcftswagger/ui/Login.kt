@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.boyko.resultcftswagger.InternetConnection
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.models.LoggedInUser
@@ -33,7 +34,11 @@ class Login : Fragment() {
         val view:View=inflater.inflate(R.layout.login_fragment,container,false)
         val btnLogin: Button =view.findViewById(R.id.btn_login)
         btnLogin.setOnClickListener{
-            login(editText_username.text.toString(),editText_password.text.toString())
+            if(InternetConnection.checkConnection(context!!))
+                login(editText_username.text.toString(),editText_password.text.toString())
+            else
+                Toast.makeText(context, "Отсутствует соединение с сетью", Toast.LENGTH_LONG).show()
+
         }
         return view
     }
