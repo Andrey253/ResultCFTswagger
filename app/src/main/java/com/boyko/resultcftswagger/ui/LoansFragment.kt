@@ -44,8 +44,7 @@ class LoansFragment : Fragment() {
     lateinit var mLoanItemFragment: LoanItemFragment
     lateinit var mCreateNewLoanFragment: CreateNewLoanFragment
     lateinit var myAdapter: Adapter
-    var listL = listOf<Loan>()
-
+    var listLoan = listOf<Loan>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,8 +53,7 @@ class LoansFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
         sharedPref = context!!.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        //getLoansAll()
-        Log.e("mytag", "onCreate LoansFragment")
+        getLoansAll()
     }
 
     override fun onCreateView(
@@ -69,18 +67,17 @@ class LoansFragment : Fragment() {
 
         var bearer: String? = sharedPref?.getString(KEY_NAME, null)
         bearer?.let {
-            progressBar.setVisibility(View.VISIBLE)
+            progressBar?.setVisibility(View.VISIBLE)
             val call = api.getLoansAll(ACCEPT, it)
             bearer = null
             call.enqueue(object : Callback<List<Loan>> {
                 override fun onResponse(call: Call<List<Loan>?>, response: Response<List<Loan>?>) {
                     if (response.isSuccessful) {
-                        progressBar.setVisibility(View.INVISIBLE)
+                        progressBar?.setVisibility(View.INVISIBLE)
 
-                        listL = response.body()!!
-
-                        myAdapter.update(listL)
-
+                        val listL = response.body()
+                        listL?.let {  listLoan = listL}
+                        listL?.let { it1 -> myAdapter.update(it1) }
 
                     } else {
                         Log.e("mytag", "No DATA, code = ${response.code()}")
@@ -102,7 +99,7 @@ class LoansFragment : Fragment() {
             getLoansAll()
         }
         recyclerview.layoutManager = LinearLayoutManager(context)
-        myAdapter = Adapter(listL, object : Adapter.Callback {
+        myAdapter = Adapter(listLoan, object : Adapter.Callback {
             override fun onItemClicked(item: Loan) {
                 //TODO Сюда придёт элемент, по которому кликнули. Можно дальше с ним работать
                 Log.e("mytag", "Элемент списка = $item")
@@ -111,7 +108,6 @@ class LoansFragment : Fragment() {
             }
         })
         recyclerview.adapter = myAdapter
-
     }
 
     fun showLoansFragment(fragment: Fragment) {
