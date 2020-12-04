@@ -3,6 +3,7 @@
      android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:background="@drawable/bg_login"
     >
 
 
@@ -30,7 +31,7 @@
         android:layout_margin="8dp"
         android:drawableLeft="@drawable/img_taikhoan"
         android:textColorHint="#CFD8DC"
-        android:textColor="#8bc34a"
+        android:textColor="#000000"
         android:inputType="textPersonName"
         android:hint="user name" />
 
@@ -48,31 +49,21 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:textColorHint="#CFD8DC"
-        android:textColor="#8bc34a"
+        android:textColor="#000000"
         android:drawableLeft="@drawable/img_matkhau"
         android:layout_alignLeft="@+id/editText_username"
         android:layout_alignStart="@+id/editText_username" />
 
     <Button
         android:id="@+id/btn_login"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/editText_password"
-        android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true"
-        android:background="#FFEB3B"
         android:text="login"
-        android:textColor="#607D8B" />
+        android:layout_below="@+id/editText_password"
+        style="@style/Buttons" />
 
     <Button
         android:id="@+id/btn_register"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_login"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:background="#FFEB3B"
         android:text="registeration"
-        android:textColor="#607D8B" />
+        android:layout_below="@+id/btn_login"
+        style="@style/Buttons" />
 
 </RelativeLayout>

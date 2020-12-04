@@ -16,4 +16,8 @@
 
     <string name="error_login"> Ошибка авторизации. \nНе верный логин или пароль.</string>
     <string name="action_logout">Logout</string>
+    <string name="action_new_loan">Новый заим</string>
+
+    <string name="button_layout_height">wrap_content</string>
+    <string name="button_layout_centerHorizontal">true</string>
 </resources>

@@ -5,7 +5,8 @@ import android.content.SharedPreferences
 import android.util.Log
 import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.models.LoggedInUser
-import com.boyko.resultcftswagger.ui.LoansFragment
+import com.boyko.resultcftswagger.ui.Loans
+
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,7 +22,7 @@ class LoginRepository (val user: String, val password: String, val c: Context){
         editor = sharedPref.edit()
         val user = LoggedInUser(username, password)
         Log.e("mytag", "LoggedInUser  $user")
-        val call = api.postLogin(LoansFragment.ACCEPT, LoansFragment.CONTENTTYPE, user)
+        val call = api.postLogin(Loans.ACCEPT, Loans.CONTENTTYPE, user)
 
         call.enqueue(object : Callback<String?> {
             override fun onResponse(call: Call<String?>, response: Response<String?>) {

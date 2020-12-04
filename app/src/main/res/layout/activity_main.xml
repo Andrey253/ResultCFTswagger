@@ -6,5 +6,4 @@
     android:layout_height="match_parent"
     android:id="@+id/main_container"
     tools:context="com.boyko.resultcftswagger.MainActivity"
-
-    />
+    android:background="@color/button_background"/>

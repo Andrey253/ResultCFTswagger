@@ -3,25 +3,23 @@ package com.boyko.resultcftswagger.ui
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.text.Editable
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.models.Loan
 import com.boyko.resultcftswagger.models.LoanConditions
 import com.boyko.resultcftswagger.models.LoanRequest
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_create_new_loan.*
 import kotlinx.android.synthetic.main.fragment_loan_item.*
-import kotlinx.android.synthetic.main.fragment_loan_item.tv_item_percent
 import kotlinx.android.synthetic.main.loans_fragment.*
 import kotlinx.android.synthetic.main.login_fragment.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,12 +34,13 @@ private const val KEY_NAME = "Bearer"
  * Use the [CreateNewLoanFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class CreateNewLoanFragment : Fragment() {
+class CreateNewLoan : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     private val api = Client.apiService
     private var sharedPref: SharedPreferences? = null
+    lateinit var mCreatedNew: CreatedNewLoan
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,8 +52,8 @@ class CreateNewLoanFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_create_new_loan, container, false)
@@ -68,18 +67,27 @@ class CreateNewLoanFragment : Fragment() {
 
     private fun sendLoanRequest() {
 
-
         val bearer: String? = sharedPref?.getString(KEY_NAME, null)
-        val call = bearer?.let { api.postGetLoans(ACCEPT, bearer,createLoanRequestObject()) }
+        val call = bearer?.let { api.postGetLoans(ACCEPT, bearer, createLoanRequestObject()) }
         call?.enqueue(object : Callback<Loan?> {
             override fun onResponse(call: Call<Loan?>, response: Response<Loan?>) {
                 if (response.isSuccessful) {
                     val loancond = response.body()
                     Log.e("mytag", "isSuccessful loancond = $loancond")
-
+                    //Создали новый займ
+                    mCreatedNew = CreatedNewLoan.newInstance(Gson().toJson(loancond), "")
+                    showFragment(mCreatedNew)
                 } else {
                     Log.e("mytag", "No DATA, code = ${response.code()}")
                 }
+            }
+
+            private fun showFragment(fragment: Fragment) {
+                fragmentManager?.beginTransaction()
+                        ?.addToBackStack(null)
+                        ?.setCustomAnimations(R.anim.left_in, R.anim.left_out)
+                        ?.replace(R.id.main_container, fragment)
+                        ?.commit()
             }
 
             override fun onFailure(call: Call<Loan?>, t: Throwable) {
@@ -138,7 +146,7 @@ class CreateNewLoanFragment : Fragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            CreateNewLoanFragment().apply {
+            CreateNewLoan().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

@@ -11,4 +11,6 @@
     <color name="colorBlack">#000000</color>
 
     <color name="colorGrey">#837E7E</color>
+
+    <color name="button_background">#FFFFB0</color>
 </resources>

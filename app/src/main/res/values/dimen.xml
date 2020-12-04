@@ -10,4 +10,8 @@
 
     <dimen name="fab_margin">16dp</dimen>
 
+    <dimen name="button_layout_width">180dp</dimen>
+
+    <dimen name="button_layout_marginTop">20dp</dimen>
+
 </resources>

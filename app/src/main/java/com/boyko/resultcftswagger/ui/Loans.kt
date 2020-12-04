@@ -13,11 +13,8 @@ import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.adapter.Adapter
 import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.models.Loan
-import com.boyko.resultcftswagger.models.LoanConditions
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
+import com.boyko.resultcftswagger.ui.itemfragment.LoanItem
 import com.google.gson.Gson
-import com.google.gson.stream.JsonReader
 import kotlinx.android.synthetic.main.loans_fragment.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -35,14 +32,13 @@ private const val KEY_NAME = "Bearer"
  * Use the [LoanConditionsFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class LoansFragment : Fragment() {
+class Loans : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     private val api = Client.apiService
     private var sharedPref: SharedPreferences? = null
-    lateinit var mLoanItemFragment: LoanItemFragment
-    lateinit var mCreateNewLoanFragment: CreateNewLoanFragment
+    lateinit var mLoanItemFragment: LoanItem
     lateinit var myAdapter: Adapter
     var listLoan = listOf<Loan>()
 
@@ -76,8 +72,9 @@ class LoansFragment : Fragment() {
                         progressBar?.setVisibility(View.INVISIBLE)
 
                         val listL = response.body()
-                        listL?.let {  listLoan = listL}
-                        listL?.let { it1 -> myAdapter.update(it1) }
+                        listL?.let {
+                            listLoan = listL
+                            myAdapter.update(listL) }
 
                     } else {
                         Log.e("mytag", "No DATA, code = ${response.code()}")
@@ -93,35 +90,31 @@ class LoansFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        Log.e("mytag", "onActivityCreated")
-        btn_get_loan.setOnClickListener {requestLoanConditions(CreateNewLoanFragment())}
-        fab.setOnClickListener { view ->
-            getLoansAll()
-        }
+        btn_get_loan.setOnClickListener {requestLoanConditions(CreateNewLoan())}
+        fab.setOnClickListener { getLoansAll() }
         recyclerview.layoutManager = LinearLayoutManager(context)
         myAdapter = Adapter(listLoan, object : Adapter.Callback {
             override fun onItemClicked(item: Loan) {
-                //TODO Сюда придёт элемент, по которому кликнули. Можно дальше с ним работать
-                Log.e("mytag", "Элемент списка = $item")
-                mLoanItemFragment = LoanItemFragment.newInstance(Gson().toJson(item),"")
-                showLoansFragment(mLoanItemFragment)
+                mLoanItemFragment = LoanItem.newInstance(Gson().toJson(item),"")
+                showFragment(mLoanItemFragment)
             }
         })
         recyclerview.adapter = myAdapter
     }
 
-    fun showLoansFragment(fragment: Fragment) {
+    fun showFragment(fragment: Fragment) {
+        Log.e("mytag", "fragment ${fragment.javaClass.name}")
         fragmentManager?.beginTransaction()
                 ?.addToBackStack(null)
                 ?.setCustomAnimations(R.anim.left_in, R.anim.left_out)
-                ?.replace(R.id.main_container, fragment)
+                ?.replace(R.id.main_container, fragment, fragment.toString())
                 ?.commit()
     }
     private fun requestLoanConditions(fragment: Fragment){
         fragmentManager?.beginTransaction()
             ?.addToBackStack(null)
             ?.setCustomAnimations(R.anim.right_in, R.anim.right_out, R.anim.left_in, R.anim.left_out)
-            ?.replace(R.id.main_container, fragment)
+            ?.replace(R.id.main_container, fragment, fragment.javaClass.name)
             ?.commit()
     }
 
@@ -139,7 +132,7 @@ class LoansFragment : Fragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-                LoansFragment().apply {
+                Loans().apply {
                     arguments = Bundle().apply {
                         putString(ARG_PARAM1, param1)
                         putString(ARG_PARAM2, param2)

@@ -24,7 +24,7 @@ private const val PREFS_NAME = "Bearer"
 private const val KEY_NAME = "Bearer"
 private const val TAG = "mytag"
 
-class LoginFragment : Fragment() {
+class Login : Fragment() {
 
     val api = Client.apiService
     var editor: SharedPreferences.Editor? = null
@@ -41,7 +41,7 @@ class LoginFragment : Fragment() {
 
         val user = LoggedInUser(username, password)
         Log.e("mytag", "LoggedInUser  $user")
-        val call = api.postLogin(LoansFragment.ACCEPT, LoansFragment.CONTENTTYPE, user)
+        val call = api.postLogin(Loans.ACCEPT, Loans.CONTENTTYPE, user)
 
         call.enqueue(object : Callback<String?> {
             override fun onResponse(call: Call<String?>, response: Response<String?>) {
@@ -69,7 +69,7 @@ class LoginFragment : Fragment() {
         fragmentManager?.beginTransaction()
                 ?.addToBackStack(null)
                 ?.setCustomAnimations(R.anim.left_in, R.anim.left_out)
-                ?.replace(R.id.main_container, LoansFragment(), LoansFragment::class.java.name)
+                ?.replace(R.id.main_container, Loans())
                 ?.commit()
     }
 }

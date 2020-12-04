@@ -1,4 +1,4 @@
-package com.boyko.resultcftswagger.ui
+package com.boyko.resultcftswagger.ui.itemfragment
 
 import android.graphics.Color
 import android.os.Build
@@ -26,7 +26,7 @@ private const val REGISTERED = "REGISTERED"
  * Use the [LoanItemFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class LoanItemFragment : Fragment() {
+class LoanItem : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -98,7 +98,7 @@ class LoanItemFragment : Fragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-                LoanItemFragment().apply {
+                LoanItem().apply {
                     arguments = Bundle().apply {
                         putString(ARG_PARAM1, param1)
                         putString(ARG_PARAM2, param2)
