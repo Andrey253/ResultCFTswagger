@@ -1,6 +1,7 @@
 package com.boyko.resultcftswagger.adapter
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,5 +54,11 @@ class Adapter(var items: List<Loan>, val callback: Callback) : RecyclerView.Adap
 
     interface Callback {
         fun onItemClicked(item: Loan)
+    }
+
+    fun update(newlist: List<Loan>) {
+        Log.e("mytag", "newlist $newlist")
+        items = newlist
+        notifyDataSetChanged()
     }
 }

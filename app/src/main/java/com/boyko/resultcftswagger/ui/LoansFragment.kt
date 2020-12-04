@@ -43,6 +43,9 @@ class LoansFragment : Fragment() {
     private var sharedPref: SharedPreferences? = null
     lateinit var mLoanItemFragment: LoanItemFragment
     lateinit var mCreateNewLoanFragment: CreateNewLoanFragment
+    lateinit var myAdapter: Adapter
+    var listL = listOf<Loan>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +54,8 @@ class LoansFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
         sharedPref = context!!.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        //getLoansAll()
+        Log.e("mytag", "onCreate LoansFragment")
     }
 
     override fun onCreateView(
@@ -60,16 +65,6 @@ class LoansFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.loans_fragment, container, false)
     }
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        btn_get_loan.setOnClickListener {requestLoanConditions(CreateNewLoanFragment())}
-        fab.setOnClickListener { view ->
-            getLoansAll()
-        }
-
-        getLoansAll()
-    }
-
     fun getLoansAll() {
 
         var bearer: String? = sharedPref?.getString(KEY_NAME, null)
@@ -81,21 +76,12 @@ class LoansFragment : Fragment() {
                 override fun onResponse(call: Call<List<Loan>?>, response: Response<List<Loan>?>) {
                     if (response.isSuccessful) {
                         progressBar.setVisibility(View.INVISIBLE)
-                        val loansAll = response.body()
-                        Log.e("mytag", "isSuccessful $loansAll")
 
-                        recyclerview.layoutManager = LinearLayoutManager(context)
-                        val myAdapter = loansAll?.let {
-                            Adapter(it, object : Adapter.Callback {
-                                override fun onItemClicked(item: Loan) {
-                                    //TODO Сюда придёт элемент, по которому кликнули. Можно дальше с ним работать
-                                    Log.e("mytag", "Элемент списка = $item")
-                                    mLoanItemFragment = LoanItemFragment.newInstance(Gson().toJson(item),"")
-                                    showLoansFragment(mLoanItemFragment)
-                                }
-                            })
-                        }
-                        recyclerview.adapter = myAdapter
+                        listL = response.body()!!
+
+                        myAdapter.update(listL)
+
+
                     } else {
                         Log.e("mytag", "No DATA, code = ${response.code()}")
                     }
@@ -106,6 +92,26 @@ class LoansFragment : Fragment() {
                 }
             })
         }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        Log.e("mytag", "onActivityCreated")
+        btn_get_loan.setOnClickListener {requestLoanConditions(CreateNewLoanFragment())}
+        fab.setOnClickListener { view ->
+            getLoansAll()
+        }
+        recyclerview.layoutManager = LinearLayoutManager(context)
+        myAdapter = Adapter(listL, object : Adapter.Callback {
+            override fun onItemClicked(item: Loan) {
+                //TODO Сюда придёт элемент, по которому кликнули. Можно дальше с ним работать
+                Log.e("mytag", "Элемент списка = $item")
+                mLoanItemFragment = LoanItemFragment.newInstance(Gson().toJson(item),"")
+                showLoansFragment(mLoanItemFragment)
+            }
+        })
+        recyclerview.adapter = myAdapter
+
     }
 
     fun showLoansFragment(fragment: Fragment) {

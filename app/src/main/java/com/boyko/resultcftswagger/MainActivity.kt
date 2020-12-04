@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity(){
                     supportFragmentManager.beginTransaction()
                             .addToBackStack(null)
                             .setCustomAnimations(R.anim.left_in, R.anim.left_out)
-                            .replace(R.id.main_container, mLoans, LoansFragment::class.java.name)
+                            .replace(R.id.main_container, mLoans)
                             .commit()
     }
     fun createNewLoan() {
