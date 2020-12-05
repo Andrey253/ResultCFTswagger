@@ -29,6 +29,7 @@ class MainActivity : BaseActivity(),
     lateinit var mLoansFragment: Loans
     lateinit var mCreateNewLoanFragment: CreateNewLoan
     lateinit var mCreatedNewLoanFragment: CreatedNewLoan
+
     lateinit var loginRepository: LoginRepository
 
     var itemMenu: MenuItem? = null
@@ -38,6 +39,7 @@ class MainActivity : BaseActivity(),
         setContentView(R.layout.activity_main)
 
         loginRepository = LoginRepository(applicationContext)
+
         initFragment()
 
         if (loginRepository.isAuthorized())

@@ -16,7 +16,7 @@ private const val REGISTERED = "REGISTERED"
 class Adapter(var items: List<Loan>, val callback: Callback) : RecyclerView.Adapter<Adapter.MainHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
-            = MainHolder(LayoutInflater.from(parent.context).inflate(R.layout.loan_item, parent, false))
+            = MainHolder(LayoutInflater.from(parent.context).inflate(R.layout.loan_item_top, parent, false))
 
     override fun getItemCount() = items.size
 
@@ -35,7 +35,12 @@ class Adapter(var items: List<Loan>, val callback: Callback) : RecyclerView.Adap
             amount.text = item.amount.toString()
             persrnt.text = item.percent.toString()
             period.text = item.period.toString()
-            state.text = item.state
+            when(item.state){
+                REGISTERED-> state.text = "ЗАРЕГИСТРИРОВАН"
+                APPROVED ->  state.text = "ОДОБРЕН"
+                REJECTED ->  state.text = "ОТКЛОНЕН"
+                else -> state.text = "ОШИБКА В ЗАЯВКЕ"
+            }
             itemView.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION) callback.onItemClicked(items[adapterPosition])
             }

@@ -12,42 +12,45 @@
         android:id="@+id/id_amount"
 
         style="@style/normalText"
-        android:layout_width="65dp"
+
         android:layout_height="32dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="id_amount" />
+        tools:text="сумма"
+/>
 
     <TextView
         android:id="@+id/id_percent"
         style="@style/normalText"
-        android:layout_width="57dp"
+
         android:layout_height="32dp"
-        android:layout_marginStart="64dp"
+        android:layout_marginStart="60dp"
         app:layout_constraintStart_toStartOf="@id/id_amount"
         app:layout_constraintTop_toTopOf="@id/id_amount"
-        tools:text="id_percent" />
+        tools:text="% \nгодовых"
+/>
 
     <TextView
         android:id="@+id/id_period"
         style="@style/normalText"
 
-        android:layout_width="46dp"
         android:layout_height="31dp"
         android:layout_marginStart="120dp"
         app:layout_constraintStart_toStartOf="@id/id_amount"
         app:layout_constraintTop_toTopOf="@id/id_amount"
-        tools:text="id_period" />
+        tools:text="срок, месяцев"
+/>
 
     <TextView
         android:id="@+id/id_state"
         style="@style/normalText"
 
-        android:layout_width="217dp"
+
         android:layout_height="32dp"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="50dp"
         app:layout_constraintStart_toStartOf="@id/id_period"
         app:layout_constraintTop_toTopOf="@id/id_period"
-        tools:text="id_state" />
+        tools:text="статус"
+/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
