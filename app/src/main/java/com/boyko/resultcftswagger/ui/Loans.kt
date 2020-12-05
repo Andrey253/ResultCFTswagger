@@ -10,12 +10,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.boyko.resultcftswagger.InternetConnection
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.adapter.Adapter
 import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.models.Loan
-import com.boyko.resultcftswagger.repositiry.LoginRepository
 import com.boyko.resultcftswagger.ui.itemfragment.LoanItem
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.loans_fragment.*

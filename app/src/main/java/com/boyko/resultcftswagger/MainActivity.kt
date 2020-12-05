@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.boyko.resultcftswagger.models.Loan
+import com.boyko.resultcftswagger.models.UserEntity
 import com.boyko.resultcftswagger.repositiry.LoginRepository
 import com.boyko.resultcftswagger.ui.*
 import com.boyko.resultcftswagger.ui.itemfragment.CreatedNewLoan
@@ -16,9 +17,12 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainActivity : BaseActivity(), Login.onClickFragmentListener,
-Register.onClickFragmentListener, Loans.onClickFragmentListener, CreatedNewLoan.onClickFragmentListener,
-CreateNewLoan.onClickFragmentListener{
+class MainActivity : BaseActivity(),
+        Login.onClickFragmentListener,
+        Register.onClickFragmentListener,
+        Loans.onClickFragmentListener,
+        CreatedNewLoan.onClickFragmentListener,
+        CreateNewLoan.onClickFragmentListener {
 
     lateinit var mLoginFragment: Login
     lateinit var mRegisterFragment: Register
@@ -42,18 +46,19 @@ CreateNewLoan.onClickFragmentListener{
     }
 
     private fun initFragment() {
-        mLoginFragment=Login().apply { listener=this@MainActivity }
-        mRegisterFragment= Register().apply { listener=this@MainActivity }
-
-        mCreateNewLoanFragment= CreateNewLoan().apply { listener=this@MainActivity }
-
-        mLoansFragment = Loans().apply { listener=this@MainActivity }
+        mLoginFragment = Login().apply { listener = this@MainActivity }
+        mRegisterFragment = Register().apply { listener = this@MainActivity }
+        mCreateNewLoanFragment = CreateNewLoan().apply { listener = this@MainActivity }
+        mLoansFragment = Loans().apply { listener = this@MainActivity }
     }
+
     override fun onBackPressed() {
-        when(supportFragmentManager.findFragmentById(R.id.main_container))
-        {
+        when (supportFragmentManager.findFragmentById(R.id.main_container)) {
             is Loans -> finish()
-            is CreatedNewLoan -> showFragment_right(mLoansFragment)
+            is CreatedNewLoan -> {
+                showFragment_right(mLoansFragment)
+                mLoansFragment.getLoansAll()
+            }
             is CreateNewLoan -> showFragment_right(mLoansFragment)
             is LoanItem -> showFragment_right(mLoansFragment)
             is Register -> showFragment_right(mLoginFragment)
@@ -76,6 +81,7 @@ CreateNewLoan.onClickFragmentListener{
             else -> super.onOptionsItemSelected(item)
         }
     }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
@@ -86,14 +92,14 @@ CreateNewLoan.onClickFragmentListener{
     }
 
     override fun clickLogin() {
-        if(isConnect())
-            send_post(mLoansFragment, LOGIN)
+        if (isConnect())
+            login_send_post(mLoansFragment, userCreate())
         else
             Toast.makeText(applicationContext, getString(R.string.no_connection), Toast.LENGTH_LONG).show()
     }
 
     override fun clickRegistration() {
-        //send_post(mLoansFragment, REGISTRATION)
+        reg_send_post(mLoansFragment)
     }
 
     override fun click_to_Login() {
@@ -105,8 +111,8 @@ CreateNewLoan.onClickFragmentListener{
     }
 
     override fun created_new_loan(fromGson: String) {
-        mCreatedNewLoanFragment = CreatedNewLoan.newInstance(fromGson,"")
-                .apply { listener=this@MainActivity }
+        mCreatedNewLoanFragment = CreatedNewLoan.newInstance(fromGson, "")
+                .apply { listener = this@MainActivity }
         showFragment_left(mCreatedNewLoanFragment)
     }
 

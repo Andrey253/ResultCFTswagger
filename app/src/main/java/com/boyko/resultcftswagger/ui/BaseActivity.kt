@@ -10,6 +10,7 @@ import com.boyko.resultcftswagger.InternetConnection
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.models.LoggedInUser
+import com.boyko.resultcftswagger.models.UserEntity
 import kotlinx.android.synthetic.main.loans_fragment.*
 import kotlinx.android.synthetic.main.login_fragment.*
 import kotlinx.android.synthetic.main.registr_fragment.*
@@ -60,12 +61,12 @@ abstract class BaseActivity: AppCompatActivity() {
         editor?.apply()
     }
 
-    fun toastShow(toast: String){
+    fun toastShow(toast: String?){
         Toast.makeText(applicationContext, toast, Toast.LENGTH_LONG).show()
     }
-
-    fun send_post(fragment: Fragment, login_or_reg: String) {
-        api.postLogin(ACCEPT, CONTENTTYPE, userCreate(login_or_reg))
+    
+    fun login_send_post(fragment: Fragment, user: LoggedInUser) {
+        api.postLogin(ACCEPT, CONTENTTYPE, user)
                 .enqueue(object : Callback<String?> {
                     override fun onResponse(call: Call<String?>, response: Response<String?>) {
                         if (response.isSuccessful) {
@@ -81,15 +82,34 @@ abstract class BaseActivity: AppCompatActivity() {
                     }
                 })
     }
+    fun reg_send_post(fragment: Fragment) {
+        val userForReg = userForReg()
+        api.postReg(ACCEPT, CONTENTTYPE, userForReg)
+                .enqueue(object : Callback<UserEntity?> {
+                    override fun onResponse(call: Call<UserEntity?>, response: Response<UserEntity?>) {
+                        if (response.isSuccessful) {
+                            toastShow("Привет, ${response.body()?.name}")
+                            login_send_post(fragment, userForReg)
+                        } else {
+                            toastShow(response.errorBody().toString())
+                            Log.e("mytag", "No DATA, code = ${response.code()}")
+                            Log.e("mytag", "response.raw()= ${response.raw()}")
+                            Log.e("mytag", "response.body()= ${response.body()}")
+                            Log.e("mytag", "response.errorBody()= ${response.errorBody()}")
 
-    private fun userCreate(login_or_reg: String): LoggedInUser {
-        return when(login_or_reg){
-            LOGIN ->
-                LoggedInUser(editText_username.text.toString(),editText_password.text.toString())
-            REGISTRATION ->
-                LoggedInUser(editText_user_reg.text.toString(),editText_password_reg.text.toString())
-            else -> LoggedInUser("","")
-        }
+                        }
+                    }
+                    override fun onFailure(call: Call<UserEntity?>, t: Throwable) {
+                        Log.e("mytag", "onFailure $t")
+                    }
+                })
+    }
+
+    fun userCreate(): LoggedInUser {
+        return     LoggedInUser(editText_username.text.toString(),editText_password.text.toString())
+    }
+    private fun userForReg(): LoggedInUser {
+        return     LoggedInUser(editText_user_reg.text.toString(),editText_password_reg.text.toString())
     }
 
 }

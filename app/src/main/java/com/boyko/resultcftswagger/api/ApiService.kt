@@ -1,10 +1,7 @@
 package com.boyko.resultcftswagger.api
 
-import com.boyko.resultcftswagger.models.Loan
-import com.boyko.resultcftswagger.models.LoanConditions
-import com.boyko.resultcftswagger.models.LoanRequest
+import com.boyko.resultcftswagger.models.*
 import retrofit2.http.POST
-import com.boyko.resultcftswagger.models.LoggedInUser
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -16,6 +13,11 @@ interface ApiService {
             @Header ("accept") accept: String,
             @Header ("Content-Type") type: String,
             @Body user: LoggedInUser): Call<String>
+    @POST("/registration")
+    fun postReg(
+            @Header ("accept") accept: String,
+            @Header ("Content-Type") type: String,
+            @Body user: LoggedInUser): Call<UserEntity>
     @POST("/loans")
     fun postGetLoans(
         @Header ("accept") accept: String,
