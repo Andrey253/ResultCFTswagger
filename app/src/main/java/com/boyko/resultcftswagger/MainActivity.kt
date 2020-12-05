@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.boyko.resultcftswagger.repositiry.LoginRepository
 import com.boyko.resultcftswagger.ui.*
 import com.boyko.resultcftswagger.ui.itemfragment.CreatedNewLoan
 import com.boyko.resultcftswagger.ui.itemfragment.LoanItem
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity(){
     lateinit var mRegister: Register
     lateinit var mLoans: Loans
     lateinit var mCreateNewLoan: CreateNewLoan
+    lateinit var loginRepository: LoginRepository
     var tvFirst:TextView?=null
     var tvSecond:TextView?=null
     var tvFirstIsCheck=true
@@ -29,25 +31,13 @@ class MainActivity : AppCompatActivity(){
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        loginRepository = LoginRepository(applicationContext)
 
         initFragment()
-        val sharedPref = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
-        if (sharedPref.contains(KEY_NAME))
+        if (loginRepository.isAuthorized())
             showLoansFragment()
         else showLoginFragment()
-    }
-
-    private fun firstSelected(){
-        tvFirst?.setBackgroundResource(R.drawable.bg_selected)
-        tvSecond?.setBackgroundResource(R.drawable.bg_un_selected)
-        tvFirstIsCheck=true
-    }
-
-    private fun secondSelected(){
-        tvSecond?.setBackgroundResource(R.drawable.bg_selected)
-        tvFirst?.setBackgroundResource(R.drawable.bg_un_selected)
-        tvFirstIsCheck=false
     }
 
     private fun initFragment() {
@@ -62,7 +52,6 @@ class MainActivity : AppCompatActivity(){
                 .setCustomAnimations(R.anim.left_in, R.anim.left_out)
                 .replace(R.id.main_container, mLoginFragment)
                 .commit()
-        firstSelected()
     }
 
     override fun onBackPressed() {
@@ -72,12 +61,20 @@ class MainActivity : AppCompatActivity(){
             is Loans -> finish()
             is CreatedNewLoan -> {
                 supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.left_in, R.anim.left_out)
                         .replace(R.id.main_container, mLoans)
                         .commit()
             }
             is LoanItem -> {
                 supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.left_in, R.anim.left_out)
                         .replace(R.id.main_container, mLoans)
+                        .commit()
+            }
+            is Register -> {
+                supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.right_in, R.anim.right_out)
+                        .replace(R.id.main_container, mLoginFragment)
                         .commit()
             }
             else -> super.onBackPressed()
@@ -88,23 +85,18 @@ class MainActivity : AppCompatActivity(){
                     supportFragmentManager.beginTransaction()
                             .addToBackStack(null)
                             .setCustomAnimations(R.anim.left_in, R.anim.left_out)
-                            .replace(R.id.main_container, mLoans)
+                            .replace(R.id.main_container, mLoans, "loan_tag")
                             .commit()
     }
-    fun createNewLoan() {
-        supportFragmentManager.beginTransaction()
-                .addToBackStack(null)
-                .setCustomAnimations(R.anim.left_in, R.anim.left_out)
-                .replace(R.id.main_container, mCreateNewLoan)
-                .commit()
-    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         itemMenu = item
         when (item.itemId) {
-            R.id.action_logout -> logout()
+            R.id.action_logout -> {
+                loginRepository.logOut()
+                finish()
+            }
         }
         return when (item.itemId) {
             R.id.action_logout -> true
@@ -112,14 +104,7 @@ class MainActivity : AppCompatActivity(){
         }
     }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
-    }
-    fun logout() {
-        var sharedPref = applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        sharedPref?.let {
-            it.edit().clear().commit() }
-        finish()
     }
 }

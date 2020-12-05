@@ -15,6 +15,7 @@ import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.adapter.Adapter
 import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.models.Loan
+import com.boyko.resultcftswagger.repositiry.LoginRepository
 import com.boyko.resultcftswagger.ui.itemfragment.LoanItem
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.loans_fragment.*
@@ -26,15 +27,14 @@ import retrofit2.Response
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-private const val PREFS_NAME = "Bearer"
-private const val KEY_NAME = "Bearer"
+
 
 /**
  * A simple [Fragment] subclass.
  * Use the [LoanConditionsFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class Loans : Fragment() {
+class Loans : BaseFragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -50,8 +50,8 @@ class Loans : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        sharedPref = context!!.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        if(InternetConnection.checkConnection(context!!))
+        sharedPref = context?.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        if(isConnect())
             getLoansAll()
         else
             Toast.makeText(context, "Отсутствует соединение с сетью", Toast.LENGTH_LONG).show()
@@ -61,26 +61,28 @@ class Loans : Fragment() {
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.loans_fragment, container, false)
     }
+
     fun getLoansAll() {
 
         var bearer: String? = sharedPref?.getString(KEY_NAME, null)
         bearer?.let {
-            progressBar?.setVisibility(View.VISIBLE)
+
+            progressON()
+
             val call = api.getLoansAll(ACCEPT, it)
-            bearer = null
+
             call.enqueue(object : Callback<List<Loan>> {
                 override fun onResponse(call: Call<List<Loan>?>, response: Response<List<Loan>?>) {
                     if (response.isSuccessful) {
-                        progressBar?.setVisibility(View.INVISIBLE)
+
+                        progressOFF()
 
                         val listL = response.body()
                         listL?.let {
                             listLoan = listL
                             myAdapter.update(listL)
-
                         }
 
                     } else {
@@ -90,7 +92,6 @@ class Loans : Fragment() {
 
                 override fun onFailure(call: Call<List<Loan>?>, t: Throwable) {
                     Log.e("mytag", "onFailure $t")
-
                 }
             })
         }
@@ -98,37 +99,25 @@ class Loans : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        btn_get_loan.setOnClickListener {requestLoanConditions(CreateNewLoan())}
+
+        btn_get_loan.setOnClickListener {showFragment(CreateNewLoan())}
         fab.setOnClickListener { getLoansAll() }
+
+        recycleCreate(listLoan)
+    }
+
+    private fun recycleCreate(listLoan: List<Loan>) {
         recyclerview.layoutManager = LinearLayoutManager(context)
         myAdapter = Adapter(listLoan, object : Adapter.Callback {
             override fun onItemClicked(item: Loan) {
-                mLoanItemFragment = LoanItem.newInstance(Gson().toJson(item),"")
+                mLoanItemFragment = LoanItem.newInstance(Gson().toJson(item), "")
                 showFragment(mLoanItemFragment)
             }
         })
         recyclerview.adapter = myAdapter
     }
 
-    fun showFragment(fragment: Fragment) {
-        Log.e("mytag", "fragment ${fragment.javaClass.name}")
-        fragmentManager?.beginTransaction()
-                ?.addToBackStack(null)
-                ?.setCustomAnimations(R.anim.right_in, R.anim.right_out)
-                ?.replace(R.id.main_container, fragment, fragment.toString())
-                ?.commit()
-    }
-    private fun requestLoanConditions(fragment: Fragment){
-        fragmentManager?.beginTransaction()
-            ?.addToBackStack(null)
-            ?.setCustomAnimations(R.anim.right_in, R.anim.right_out, R.anim.left_in, R.anim.left_out)
-            ?.replace(R.id.main_container, fragment, fragment.javaClass.name)
-            ?.commit()
-    }
-
     companion object {
-        const val ACCEPT ="*/*"
-        const val CONTENTTYPE ="application/json"
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
