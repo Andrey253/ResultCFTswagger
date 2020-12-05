@@ -20,4 +20,5 @@
 
     <string name="button_layout_height">wrap_content</string>
     <string name="button_layout_centerHorizontal">true</string>
+    <string name="no_connection">Отсутствует соединение с сетью</string>
 </resources>

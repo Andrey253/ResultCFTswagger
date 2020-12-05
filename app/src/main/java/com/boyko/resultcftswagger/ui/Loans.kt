@@ -43,6 +43,8 @@ class Loans : BaseFragment() {
     lateinit var mLoanItemFragment: LoanItem
     lateinit var myAdapter: Adapter
     var listLoan = listOf<Loan>()
+    var listener: onClickFragmentListener?=null
+        set(value) {field=value}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,47 +65,37 @@ class Loans : BaseFragment() {
     ): View? {
         return inflater.inflate(R.layout.loans_fragment, container, false)
     }
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        btn_get_loan.setOnClickListener {listener?.create_new_loan()}
+        fab.setOnClickListener { getLoansAll() }
+
+        recycleCreate(listLoan)
+    }
 
     fun getLoansAll() {
-
-        var bearer: String? = sharedPref?.getString(KEY_NAME, null)
+        val bearer: String? = sharedPref?.getString(KEY_NAME, null)
         bearer?.let {
-
             progressON()
-
             val call = api.getLoansAll(ACCEPT, it)
-
             call.enqueue(object : Callback<List<Loan>> {
                 override fun onResponse(call: Call<List<Loan>?>, response: Response<List<Loan>?>) {
                     if (response.isSuccessful) {
-
                         progressOFF()
-
-                        val listL = response.body()
-                        listL?.let {
-                            listLoan = listL
-                            myAdapter.update(listL)
+                        response.body()?.let {
+                            listLoan = it
+                            myAdapter.update(it)
                         }
-
                     } else {
                         Log.e("mytag", "No DATA, code = ${response.code()}")
                     }
                 }
-
                 override fun onFailure(call: Call<List<Loan>?>, t: Throwable) {
                     Log.e("mytag", "onFailure $t")
                 }
             })
         }
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        btn_get_loan.setOnClickListener {showFragment(CreateNewLoan())}
-        fab.setOnClickListener { getLoansAll() }
-
-        recycleCreate(listLoan)
     }
 
     private fun recycleCreate(listLoan: List<Loan>) {
@@ -135,5 +127,8 @@ class Loans : BaseFragment() {
                         putString(ARG_PARAM2, param2)
                     }
                 }
+    }
+    interface onClickFragmentListener{
+        fun create_new_loan()
     }
 }

@@ -6,36 +6,31 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import com.boyko.resultcftswagger.InternetConnection
+import com.boyko.resultcftswagger.MainActivity
 import com.boyko.resultcftswagger.R
-import kotlinx.android.synthetic.main.login_fragment.*
 
-/**
- * Created by minh98 on 17/08/2017.
- */
 class Register : BaseFragment() {
+    var listener: onClickFragmentListener?=null
+        set(value) {field=value}
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view:View= inflater.inflate(R.layout.registr_fragment,container,false)
 
         val btnLogin = view.findViewById<Button>(R.id.btn_login)
         val btnReg = view.findViewById<Button>(R.id.btn_register)
         btnLogin.setOnClickListener{
-            if(InternetConnection.checkConnection(context!!))
-                showFragment(Login())
-            else
-                Toast.makeText(context, "Отсутствует соединение с сетью", Toast.LENGTH_LONG).show()
+            listener?.click_to_Login()
         }
 
         btnReg.setOnClickListener{
-            showFragment(Login())
+            listener?.clickRegistration()
         }
 
         return view
     }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
+    interface onClickFragmentListener{
+        fun clickRegistration()
+        fun click_to_Login()
     }
 }

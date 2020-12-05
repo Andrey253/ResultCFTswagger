@@ -1,96 +1,68 @@
 package com.boyko.resultcftswagger
 
-import android.content.Context
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Toast
+import com.boyko.resultcftswagger.models.Loan
 import com.boyko.resultcftswagger.repositiry.LoginRepository
 import com.boyko.resultcftswagger.ui.*
 import com.boyko.resultcftswagger.ui.itemfragment.CreatedNewLoan
 import com.boyko.resultcftswagger.ui.itemfragment.LoanItem
+import com.google.gson.Gson
+import kotlinx.android.synthetic.main.login_fragment.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-private const val PREFS_NAME = "Bearer"
-private const val KEY_NAME = "Bearer"
-private const val TAG = "mytag"
-class MainActivity : AppCompatActivity(){
+class MainActivity : BaseActivity(), Login.onClickFragmentListener,
+Register.onClickFragmentListener, Loans.onClickFragmentListener, CreatedNewLoan.onClickFragmentListener,
+CreateNewLoan.onClickFragmentListener{
 
     lateinit var mLoginFragment: Login
-    lateinit var mRegister: Register
-    lateinit var mLoans: Loans
-    lateinit var mCreateNewLoan: CreateNewLoan
+    lateinit var mRegisterFragment: Register
+    lateinit var mLoansFragment: Loans
+    lateinit var mCreateNewLoanFragment: CreateNewLoan
+    lateinit var mCreatedNewLoanFragment: CreatedNewLoan
     lateinit var loginRepository: LoginRepository
-    var tvFirst:TextView?=null
-    var tvSecond:TextView?=null
-    var tvFirstIsCheck=true
+
     var itemMenu: MenuItem? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        loginRepository = LoginRepository(applicationContext)
 
+        loginRepository = LoginRepository(applicationContext)
         initFragment()
 
         if (loginRepository.isAuthorized())
-            showLoansFragment()
-        else showLoginFragment()
+            showFragment_left(mLoansFragment)
+        else showFragment_left(mLoginFragment)
     }
 
     private fun initFragment() {
-        mLoginFragment=Login()//.apply { listener=this@MainActivity }
-        mRegister= Register()
-        mLoans = Loans.newInstance("","")
-        mCreateNewLoan = CreateNewLoan()
-    }
+        mLoginFragment=Login().apply { listener=this@MainActivity }
+        mRegisterFragment= Register().apply { listener=this@MainActivity }
 
-    private fun showLoginFragment() {
-        supportFragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.left_in, R.anim.left_out)
-                .replace(R.id.main_container, mLoginFragment)
-                .commit()
-    }
+        mCreateNewLoanFragment= CreateNewLoan().apply { listener=this@MainActivity }
 
+        mLoansFragment = Loans().apply { listener=this@MainActivity }
+    }
     override fun onBackPressed() {
-        val fragment = supportFragmentManager.findFragmentById(R.id.main_container)
-        when(fragment)
+        when(supportFragmentManager.findFragmentById(R.id.main_container))
         {
             is Loans -> finish()
-            is CreatedNewLoan -> {
-                supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.left_in, R.anim.left_out)
-                        .replace(R.id.main_container, mLoans)
-                        .commit()
-            }
-            is LoanItem -> {
-                supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.left_in, R.anim.left_out)
-                        .replace(R.id.main_container, mLoans)
-                        .commit()
-            }
-            is Register -> {
-                supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.right_in, R.anim.right_out)
-                        .replace(R.id.main_container, mLoginFragment)
-                        .commit()
-            }
+            is CreatedNewLoan -> showFragment_right(mLoansFragment)
+            is CreateNewLoan -> showFragment_right(mLoansFragment)
+            is LoanItem -> showFragment_right(mLoansFragment)
+            is Register -> showFragment_right(mLoginFragment)
+            is Login -> finish()
             else -> super.onBackPressed()
         }
     }
 
-    fun showLoansFragment() {
-                    supportFragmentManager.beginTransaction()
-                            .addToBackStack(null)
-                            .setCustomAnimations(R.anim.left_in, R.anim.left_out)
-                            .replace(R.id.main_container, mLoans, "loan_tag")
-                            .commit()
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         itemMenu = item
         when (item.itemId) {
             R.id.action_logout -> {
@@ -98,6 +70,7 @@ class MainActivity : AppCompatActivity(){
                 finish()
             }
         }
+
         return when (item.itemId) {
             R.id.action_logout -> true
             else -> super.onOptionsItemSelected(item)
@@ -107,4 +80,39 @@ class MainActivity : AppCompatActivity(){
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
+
+    override fun click_to_Registration() {
+        showFragment_left(mRegisterFragment)
+    }
+
+    override fun clickLogin() {
+        if(isConnect())
+            send_post(mLoansFragment, LOGIN)
+        else
+            Toast.makeText(applicationContext, getString(R.string.no_connection), Toast.LENGTH_LONG).show()
+    }
+
+    override fun clickRegistration() {
+        //send_post(mLoansFragment, REGISTRATION)
+    }
+
+    override fun click_to_Login() {
+        showFragment_right(mLoginFragment)
+    }
+
+    override fun create_new_loan() {
+        showFragment_left(mCreateNewLoanFragment)
+    }
+
+    override fun created_new_loan(fromGson: String) {
+        mCreatedNewLoanFragment = CreatedNewLoan.newInstance(fromGson,"")
+                .apply { listener=this@MainActivity }
+        showFragment_left(mCreatedNewLoanFragment)
+    }
+
+    override fun click_to_main() {
+        showFragment_left(mLoansFragment)
+        mLoansFragment.getLoansAll()
+    }
+
 }

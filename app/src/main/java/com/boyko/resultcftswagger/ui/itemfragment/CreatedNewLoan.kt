@@ -8,13 +8,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.annotation.RequiresApi
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.models.Loan
-import com.boyko.resultcftswagger.ui.CreateNewLoan
-import com.boyko.resultcftswagger.ui.Loans
-import com.boyko.resultcftswagger.ui.Login
-import com.boyko.resultcftswagger.ui.Register
+import com.boyko.resultcftswagger.ui.*
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_created_new_loan.*
 import kotlinx.android.synthetic.main.fragment_loan_item.*
@@ -40,11 +38,14 @@ private const val REGISTERED = "REGISTERED"
  * Use the [CreatedNewLoanFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class CreatedNewLoan : Fragment() {
+class CreatedNewLoan : BaseFragment() {
     // TODO: Rename and change types of parameters
     //lateinit var mLoans: Loans
     private var param1: String? = null
     private var param2: String? = null
+
+    var listener: onClickFragmentListener?=null
+        set(value) {field=value}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +62,10 @@ class CreatedNewLoan : Fragment() {
     }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        btn_to_main.setOnClickListener { showLoansFragment(Loans()) }
+        Log.e("mytag", "Вешаем слушатель")
+        val btn = this.view?.findViewById<Button>(R.id.btn_to_main)
+        btn?.setOnClickListener {
+            listener?.click_to_main()}
     }
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -96,6 +100,9 @@ class CreatedNewLoan : Fragment() {
                 tv_item_state1.setBackgroundColor(Color.RED)}
 
         }
+    }
+    interface onClickFragmentListener{
+        fun click_to_main()
     }
 
     companion object {

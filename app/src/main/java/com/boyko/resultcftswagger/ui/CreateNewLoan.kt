@@ -42,6 +42,9 @@ class CreateNewLoan : BaseFragment() {
     private var sharedPref: SharedPreferences? = null
     lateinit var mCreatedNew: CreatedNewLoan
 
+    var listener: onClickFragmentListener?=null
+        set(value) {field=value}
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -57,6 +60,9 @@ class CreateNewLoan : BaseFragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_create_new_loan, container, false)
+    }
+    interface onClickFragmentListener{
+        fun created_new_loan(param1: String)
     }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -84,20 +90,12 @@ class CreateNewLoan : BaseFragment() {
                     val loancond = response.body()
                     Log.e("mytag", "isSuccessful loancond = $loancond")
                     //Создали новый займ
-                    mCreatedNew = CreatedNewLoan.newInstance(Gson().toJson(loancond), "")
-                    showFragment(mCreatedNew)
+                    listener?.created_new_loan(Gson().toJson(loancond))
                 } else {
                     Log.e("mytag", "No DATA, code = ${response.code()}")
                 }
             }
 
-            private fun showFragment(fragment: Fragment) {
-                fragmentManager?.beginTransaction()
-                        ?.addToBackStack(null)
-                        ?.setCustomAnimations(R.anim.left_in, R.anim.left_out)
-                        ?.replace(R.id.main_container, fragment)
-                        ?.commit()
-            }
 
             override fun onFailure(call: Call<Loan?>, t: Throwable) {
                 Log.e("mytag", "onFailure $t")
@@ -153,11 +151,11 @@ class CreateNewLoan : BaseFragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            CreateNewLoan().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                CreateNewLoan().apply {
+                    arguments = Bundle().apply {
+                        putString(ARG_PARAM1, param1)
+                        putString(ARG_PARAM2, param2)
+                    }
                 }
-            }
     }
 }
