@@ -39,16 +39,16 @@ class Register : BaseFragment() {
         fun clickRegistration()
         fun click_to_Login()
     }
-    fun showUsernameError() {
+    private fun showUsernameError() {
         editText_user_reg.error = getString(R.string.invalid_username)
     }
-    fun toggleRegButton(enable: Boolean) {
+    private fun toggleRegButton(enable: Boolean) {
         btn_reg_register.isEnabled = enable
     }
-    fun showPasswordError() {
+    private fun showPasswordError() {
         editText_password_reg.error = getString(R.string.invalid_password)
     }
-    fun showPasswordRepeatError() {
+    private fun showPasswordRepeatError() {
         editText_password_repeat.error = getString(R.string.invalid_repeat_password)
     }
     private fun initViews() {
@@ -76,13 +76,13 @@ class Register : BaseFragment() {
                 )
             }
 
-            setOnEditorActionListener { _, actionId, _ ->
-                when (actionId) {
-                    EditorInfo.IME_ACTION_DONE ->
-                        listener?.clickRegistration()
-                }
-                false
-            }
+//            setOnEditorActionListener { _, actionId, _ ->
+//                when (actionId) {
+//                    EditorInfo.IME_ACTION_DONE ->
+//                        listener?.clickRegistration()
+//                }
+//                false
+//            }
 
             btn_reg_register.setOnClickListener {
                 listener?.clickRegistration()
@@ -118,6 +118,7 @@ class Register : BaseFragment() {
         return password.equals(repeatpassword)
     }
 }
+
 private fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(editable: Editable?) {
