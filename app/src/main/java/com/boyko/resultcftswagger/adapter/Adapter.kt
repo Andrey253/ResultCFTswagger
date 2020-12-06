@@ -60,7 +60,6 @@ class Adapter(var items: List<Loan>, val callback: Callback) : RecyclerView.Adap
     }
 
     fun update(newlist: List<Loan>) {
-        Log.e("mytag", "newlist $newlist")
         items = newlist
         notifyDataSetChanged()
     }

@@ -15,7 +15,7 @@
         tools:layout_editor_absoluteY="0dp">
 
         <Button
-            android:id="@+id/btn_get_loan"
+            android:id="@+id/btn_req_loan_cond"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/get_money" />

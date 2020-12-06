@@ -1,11 +1,11 @@
 package com.boyko.resultcftswagger.api
 
 import com.boyko.resultcftswagger.models.*
-import retrofit2.http.POST
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.POST
 
 interface ApiService {
     @POST("/login")
@@ -20,9 +20,9 @@ interface ApiService {
             @Body user: LoggedInUser): Call<UserEntity>
     @POST("/loans")
     fun postGetLoans(
-        @Header ("accept") accept: String,
-        @Header ("Authorization") auth: String,
-        @Body loanRequest: LoanRequest): Call<Loan>
+            @Header ("accept") accept: String,
+            @Header ("Authorization") auth: String,
+            @Body loanRequest: LoanRequest): Call<Loan>
 
     @GET("/loans/conditions")
     fun getLoansConditions(

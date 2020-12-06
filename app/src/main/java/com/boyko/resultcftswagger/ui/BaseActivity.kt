@@ -1,7 +1,5 @@
 package com.boyko.resultcftswagger.ui
 
-import android.content.Context
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +9,7 @@ import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.models.LoggedInUser
 import com.boyko.resultcftswagger.models.UserEntity
+import com.boyko.resultcftswagger.repositiry.LoginRepository
 import kotlinx.android.synthetic.main.loans_fragment.*
 import kotlinx.android.synthetic.main.login_fragment.*
 import kotlinx.android.synthetic.main.registr_fragment.*
@@ -25,8 +24,6 @@ abstract class BaseActivity: AppCompatActivity() {
         const val KEY_NAME = "Bearer"
         const val ACCEPT ="*/*"
         const val CONTENTTYPE ="application/json"
-        const val LOGIN ="login"
-        const val REGISTRATION ="registration"
     }
 
     fun showFragment_left(fragment: Fragment) {
@@ -55,53 +52,38 @@ abstract class BaseActivity: AppCompatActivity() {
         progressBar?.setVisibility(View.INVISIBLE)
     }
 
-    fun authorization(bearer: String?){
-        val editor = applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)?.edit()
-        editor?.putString(BaseFragment.KEY_NAME, bearer)
-        editor?.apply()
-    }
-
     fun toastShow(toast: String?){
         Toast.makeText(applicationContext, toast, Toast.LENGTH_LONG).show()
     }
     
-    fun login_send_post(fragment: Fragment, user: LoggedInUser) {
+    fun login_send_post(fragment: Fragment, user: LoggedInUser, loginRepository: LoginRepository) {
         api.postLogin(ACCEPT, CONTENTTYPE, user)
                 .enqueue(object : Callback<String?> {
                     override fun onResponse(call: Call<String?>, response: Response<String?>) {
                         if (response.isSuccessful) {
-                            authorization(response.body())
+                            loginRepository.authorization(response.body())
                             showFragment_left(fragment)
                         } else {
                             toastShow(getString(R.string.error_login))
-                            Log.e("mytag", "No DATA, code = ${response.code()}")
                         }
                     }
                     override fun onFailure(call: Call<String?>, t: Throwable) {
-                        Log.e("mytag", "onFailure $t")
                     }
                 })
     }
-    fun reg_send_post(fragment: Fragment) {
+    fun reg_send_post(fragment: Fragment, loginRepository: LoginRepository) {
         val userForReg = userForReg()
         api.postReg(ACCEPT, CONTENTTYPE, userForReg)
                 .enqueue(object : Callback<UserEntity?> {
                     override fun onResponse(call: Call<UserEntity?>, response: Response<UserEntity?>) {
                         if (response.isSuccessful) {
                             toastShow("Привет, ${response.body()?.name}")
-                            login_send_post(fragment, userForReg)
+                            login_send_post(fragment, userForReg, loginRepository)
                         } else {
                             toastShow(response.errorBody().toString())
-                            Log.e("mytag", "No DATA, code = ${response.code()}")
-                            Log.e("mytag", "response.raw()= ${response.raw()}")
-                            Log.e("mytag", "response.body()= ${response.body()}")
-                            Log.e("mytag", "response.errorBody()= ${response.errorBody()}")
-
                         }
                     }
-                    override fun onFailure(call: Call<UserEntity?>, t: Throwable) {
-                        Log.e("mytag", "onFailure $t")
-                    }
+                    override fun onFailure(call: Call<UserEntity?>, t: Throwable) {}
                 })
     }
 

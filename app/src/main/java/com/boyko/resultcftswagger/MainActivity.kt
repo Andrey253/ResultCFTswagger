@@ -1,21 +1,15 @@
 package com.boyko.resultcftswagger
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import com.boyko.resultcftswagger.models.Loan
-import com.boyko.resultcftswagger.models.UserEntity
 import com.boyko.resultcftswagger.repositiry.LoginRepository
 import com.boyko.resultcftswagger.ui.*
 import com.boyko.resultcftswagger.ui.itemfragment.CreatedNewLoan
 import com.boyko.resultcftswagger.ui.itemfragment.LoanItem
-import com.google.gson.Gson
+import kotlinx.android.synthetic.main.loans_fragment.*
 import kotlinx.android.synthetic.main.login_fragment.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class MainActivity : BaseActivity(),
         Login.onClickFragmentListener,
@@ -39,7 +33,6 @@ class MainActivity : BaseActivity(),
         setContentView(R.layout.activity_main)
 
         loginRepository = LoginRepository(applicationContext)
-
         initFragment()
 
         if (loginRepository.isAuthorized())
@@ -49,9 +42,9 @@ class MainActivity : BaseActivity(),
 
     private fun initFragment() {
         mLoginFragment = Login().apply { listener = this@MainActivity }
+        mLoansFragment = Loans().apply { listener = this@MainActivity}
         mRegisterFragment = Register().apply { listener = this@MainActivity }
         mCreateNewLoanFragment = CreateNewLoan().apply { listener = this@MainActivity }
-        mLoansFragment = Loans().apply { listener = this@MainActivity }
     }
 
     override fun onBackPressed() {
@@ -77,13 +70,11 @@ class MainActivity : BaseActivity(),
                 finish()
             }
         }
-
         return when (item.itemId) {
             R.id.action_logout -> true
             else -> super.onOptionsItemSelected(item)
         }
     }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
@@ -92,16 +83,20 @@ class MainActivity : BaseActivity(),
     override fun click_to_Registration() {
         showFragment_left(mRegisterFragment)
     }
+    fun check_connect_and_run(f: () -> Unit){
+        if (isConnect())
+            f()
+        else
+            toastShow(getString(R.string.no_connection))
+    }
 
     override fun clickLogin() {
-        if (isConnect())
-            login_send_post(mLoansFragment, userCreate())
-        else
-            Toast.makeText(applicationContext, getString(R.string.no_connection), Toast.LENGTH_LONG).show()
+        check_connect_and_run { login_send_post(mLoansFragment, userCreate(), loginRepository) }
     }
 
     override fun clickRegistration() {
-        reg_send_post(mLoansFragment)
+
+        check_connect_and_run { reg_send_post(mLoansFragment, loginRepository) }
     }
 
     override fun click_to_Login() {
@@ -113,14 +108,14 @@ class MainActivity : BaseActivity(),
     }
 
     override fun created_new_loan(fromGson: String) {
-        mCreatedNewLoanFragment = CreatedNewLoan.newInstance(fromGson, "")
+        mCreatedNewLoanFragment = CreatedNewLoan.newInstance(fromGson)
                 .apply { listener = this@MainActivity }
         showFragment_left(mCreatedNewLoanFragment)
     }
 
     override fun click_to_main() {
         showFragment_left(mLoansFragment)
-        mLoansFragment.getLoansAll()
-    }
+        mLoansFragment.send_getLoansAll()
 
+    }
 }

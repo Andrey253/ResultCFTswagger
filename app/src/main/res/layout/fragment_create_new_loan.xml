@@ -37,7 +37,8 @@
                 android:id="@+id/tv_new_firstname"
                 style="@style/normalText"
                 android:layout_columnSpan="1"
-                android:layout_columnWeight="5" />
+                android:layout_columnWeight="5"
+                android:hint="Введите Имя"/>
 
             <TextView
                 android:id="@+id/tv_new_lastname1"
@@ -50,6 +51,7 @@
                 android:id="@+id/tv_new_lastname"
                 android:layout_columnWeight="1"
                 android:layout_columnSpan="1"
+                android:hint="Введите Фамилию"
                 style="@style/normalText" />
             <TextView
                 android:id="@+id/tv_new_phone1"
@@ -62,7 +64,8 @@
                 android:id="@+id/tv_new_phone"
                 android:layout_columnWeight="1"
                 style="@style/normalText"
-                android:layout_columnSpan="1" />
+                android:layout_columnSpan="1"
+                android:hint="Укажите телефон"/>
             <TextView
                 android:id="@+id/tv_new_amount1"
                 android:layout_columnWeight="1"
