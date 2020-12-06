@@ -63,7 +63,7 @@ abstract class BaseActivity: AppCompatActivity() {
                         if (response.isSuccessful) {
                             loginRepository.authorization(response.body())
                             showFragment_left(fragment)
-                            toastShow("${user.name}, вы успешно авторизованы")
+                            toastShow(user.name + getString(R.string.authorization_successful))
                         } else {
                             toastShow(getString(R.string.error_login))
                         }
@@ -78,10 +78,10 @@ abstract class BaseActivity: AppCompatActivity() {
                 .enqueue(object : Callback<UserEntity?> {
                     override fun onResponse(call: Call<UserEntity?>, response: Response<UserEntity?>) {
                         if (response.isSuccessful) {
-                            toastShow("${response.body()?.name}, вы успешно зарегестрированы")
+                            toastShow(response.body()?.name + getString(R.string.registration_successful))
                             login_send_post(fragment, userForReg, loginRepository)
                         } else {
-                            toastShow(response.errorBody().toString())
+                            toastShow(getString(R.string.user_already_exist))
                         }
                     }
                     override fun onFailure(call: Call<UserEntity?>, t: Throwable) {}
@@ -94,5 +94,4 @@ abstract class BaseActivity: AppCompatActivity() {
     private fun userForReg(): LoggedInUser {
         return     LoggedInUser(editText_user_reg.text.toString(),editText_password_reg.text.toString())
     }
-
 }

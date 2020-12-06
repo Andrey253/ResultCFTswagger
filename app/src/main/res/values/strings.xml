@@ -21,4 +21,8 @@
     <string name="button_layout_height">wrap_content</string>
     <string name="button_layout_centerHorizontal">true</string>
     <string name="no_connection">Отсутствует соединение с сетью</string>
+    <string name="password">password</string>
+    <string name="user_already_exist">Пользователь с таким именем уже зарегистрирован</string>
+    <string name="registration_successful">\" , вы успешно зарегестрированы\"</string>
+    <string name="authorization_successful">\" , вы успешно авторизованы\"</string>
 </resources>

@@ -1,15 +1,25 @@
 package com.boyko.resultcftswagger
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Patterns
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import android.widget.Toast
+import androidx.core.widget.doAfterTextChanged
 import com.boyko.resultcftswagger.repositiry.LoginRepository
 import com.boyko.resultcftswagger.ui.*
 import com.boyko.resultcftswagger.ui.itemfragment.CreatedNewLoan
 import com.boyko.resultcftswagger.ui.itemfragment.LoanItem
 import kotlinx.android.synthetic.main.loans_fragment.*
 import kotlinx.android.synthetic.main.login_fragment.*
+import kotlinx.android.synthetic.main.login_fragment.btn_login
+import kotlinx.android.synthetic.main.login_fragment.view.*
+import kotlinx.android.synthetic.main.registr_fragment.*
 
 class MainActivity : BaseActivity(),
         Login.onClickFragmentListener,
@@ -120,4 +130,5 @@ class MainActivity : BaseActivity(),
         check_connect_and_run { mLoansFragment.send_getLoansAll()}
 
     }
+
 }

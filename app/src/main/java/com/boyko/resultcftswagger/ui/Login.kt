@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.boyko.resultcftswagger.R
+import kotlinx.android.synthetic.main.login_fragment.*
+import kotlinx.android.synthetic.main.registr_fragment.*
 
 class Login : BaseFragment() {
 
