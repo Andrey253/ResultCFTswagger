@@ -52,7 +52,7 @@ class MainActivity : BaseActivity(),
             is Loans -> finish()
             is CreatedNewLoan -> {
                 showFragment_right(mLoansFragment)
-                mLoansFragment.getLoansAll()
+                check_connect_and_run { mLoansFragment.getLoansAll()}
             }
             is CreateNewLoan -> showFragment_right(mLoansFragment)
             is LoanItem -> showFragment_right(mLoansFragment)
@@ -86,8 +86,10 @@ class MainActivity : BaseActivity(),
     fun check_connect_and_run(f: () -> Unit){
         if (isConnect())
             f()
-        else
+        else {
+            progressOFF()
             toastShow(getString(R.string.no_connection))
+        }
     }
 
     override fun clickLogin() {
@@ -115,7 +117,7 @@ class MainActivity : BaseActivity(),
 
     override fun click_to_main() {
         showFragment_left(mLoansFragment)
-        mLoansFragment.send_getLoansAll()
+        check_connect_and_run { mLoansFragment.send_getLoansAll()}
 
     }
 }

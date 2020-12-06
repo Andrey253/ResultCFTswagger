@@ -4,7 +4,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.boyko.resultcftswagger.InternetConnection
+import com.boyko.resultcftswagger.util.InternetConnection
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.models.LoggedInUser
@@ -63,6 +63,7 @@ abstract class BaseActivity: AppCompatActivity() {
                         if (response.isSuccessful) {
                             loginRepository.authorization(response.body())
                             showFragment_left(fragment)
+                            toastShow("${user.name}, вы успешно авторизованы")
                         } else {
                             toastShow(getString(R.string.error_login))
                         }
@@ -77,7 +78,7 @@ abstract class BaseActivity: AppCompatActivity() {
                 .enqueue(object : Callback<UserEntity?> {
                     override fun onResponse(call: Call<UserEntity?>, response: Response<UserEntity?>) {
                         if (response.isSuccessful) {
-                            toastShow("Привет, ${response.body()?.name}")
+                            toastShow("${response.body()?.name}, вы успешно зарегестрированы")
                             login_send_post(fragment, userForReg, loginRepository)
                         } else {
                             toastShow(response.errorBody().toString())

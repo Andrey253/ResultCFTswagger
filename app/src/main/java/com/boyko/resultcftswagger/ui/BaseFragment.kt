@@ -1,17 +1,13 @@
 package com.boyko.resultcftswagger.ui
 
-import android.content.SharedPreferences
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.boyko.resultcftswagger.InternetConnection
+import com.boyko.resultcftswagger.util.InternetConnection
 import com.boyko.resultcftswagger.R
-import com.boyko.resultcftswagger.api.ApiService
-import com.boyko.resultcftswagger.models.Loan
 import kotlinx.android.synthetic.main.loans_fragment.*
-import retrofit2.Call
 
-abstract class BaseFragment: Fragment() {
+abstract class BaseFragment: Fragment(){
     companion object{
         const val PREFS_NAME = "Bearer"
         const val KEY_NAME = "Bearer"
@@ -29,7 +25,10 @@ abstract class BaseFragment: Fragment() {
     fun check_connect_and_run(function: () -> Unit){
         if (isConnect())
             function()
-        else Toast.makeText(context,getString(R.string.no_connection), Toast.LENGTH_LONG)
+        else{
+            Toast.makeText(context,getString(R.string.no_connection), Toast.LENGTH_LONG)
+            progressOFF()
+        }
     }
     fun isConnect(): Boolean{
         return InternetConnection.checkConnection(context!!)

@@ -3,19 +3,15 @@ package com.boyko.resultcftswagger.ui.itemfragment
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.models.Loan
 import com.boyko.resultcftswagger.ui.*
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.fragment_created_new_loan.*
-import kotlinx.android.synthetic.main.fragment_loan_item.*
 import kotlinx.android.synthetic.main.fragment_loan_item.tv_item_amount
 import kotlinx.android.synthetic.main.fragment_loan_item.tv_item_name
 import kotlinx.android.synthetic.main.fragment_loan_item.tv_item_percent
@@ -23,7 +19,6 @@ import kotlinx.android.synthetic.main.fragment_loan_item.tv_item_period
 import kotlinx.android.synthetic.main.fragment_loan_item.tv_item_phone
 import kotlinx.android.synthetic.main.fragment_loan_item.tv_item_state
 import kotlinx.android.synthetic.main.fragment_loan_item.tv_item_state1
-import kotlinx.android.synthetic.main.loans_fragment.*
 
 // TODO: Rename parameter arguments, choose names that match
 

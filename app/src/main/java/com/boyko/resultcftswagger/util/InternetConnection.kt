@@ -1,4 +1,4 @@
-package com.boyko.resultcftswagger
+package com.boyko.resultcftswagger.util
 
 import android.content.Context
 import android.net.ConnectivityManager
