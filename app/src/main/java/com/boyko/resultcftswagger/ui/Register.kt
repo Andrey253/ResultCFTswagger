@@ -24,8 +24,12 @@ class Register : BaseFragment() {
         val view:View= inflater.inflate(R.layout.registr_fragment,container,false)
 
         val btnLogin = view.findViewById<Button>(R.id.btn_reg_login)
+        val btn_reg_register = view.findViewById<Button>(R.id.btn_reg_register)
         btnLogin.setOnClickListener{
             listener?.click_to_Login()
+        }
+        btn_reg_register.setOnClickListener {
+            listener?.clickRegistration()
         }
         return view
     }
@@ -67,27 +71,13 @@ class Register : BaseFragment() {
                     editText_password_repeat.text.toString()
             )
         }
-        editText_password_repeat.apply {
-            afterTextChanged {
+        editText_password_repeat.afterTextChanged {
                 onLoginDataUpdated(
                         editText_user_reg.text.toString(),
                         editText_password_reg.text.toString(),
                         editText_password_repeat.text.toString()
                 )
             }
-
-//            setOnEditorActionListener { _, actionId, _ ->
-//                when (actionId) {
-//                    EditorInfo.IME_ACTION_DONE ->
-//                        listener?.clickRegistration()
-//                }
-//                false
-//            }
-
-            btn_reg_register.setOnClickListener {
-                listener?.clickRegistration()
-            }
-        }
     }
 
     private fun onLoginDataUpdated(username: String, password: String, passwordrepeat: String) {
@@ -129,5 +119,4 @@ private fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
 
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
     })
-
 }

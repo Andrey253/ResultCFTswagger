@@ -12,7 +12,7 @@
     <string name="welcome">"Welcome!"</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
-    <string name="invalid_repeat_password">Passwords passwords are different</string>
+    <string name="invalid_repeat_password">Passwords are different</string>
     <string name="login_failed">"Login failed"</string>
 
     <string name="error_login"> Ошибка авторизации. \nНе верный логин или пароль.</string>
@@ -24,6 +24,6 @@
     <string name="no_connection">Отсутствует соединение с сетью</string>
     <string name="password">password</string>
     <string name="user_already_exist">Пользователь с таким именем уже зарегистрирован</string>
-    <string name="registration_successful">\" , вы успешно зарегестрированы\"</string>
-    <string name="authorization_successful">\" , вы успешно авторизованы\"</string>
+    <string name="registration_successful"> , вы успешно зарегестрированы</string>
+    <string name="authorization_successful"> , вы успешно авторизованы</string>
 </resources>
