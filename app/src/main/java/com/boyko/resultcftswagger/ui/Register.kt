@@ -49,7 +49,7 @@ class Register : BaseFragment() {
         editText_password_reg.error = getString(R.string.invalid_password)
     }
     fun showPasswordRepeatError() {
-        editText_password_repeat.error = getString(R.string.invalid_password)
+        editText_password_repeat.error = getString(R.string.invalid_repeat_password)
     }
     private fun initViews() {
 
@@ -97,7 +97,7 @@ class Register : BaseFragment() {
         } else if (!isPasswordValid(password)) {
             showPasswordError()
             toggleRegButton(enable = false)
-        } else if (!isPasswordValid(passwordrepeat)) {
+        } else if (!isRepeatPasswordValid(password, passwordrepeat)) {
             showPasswordRepeatError()
             toggleRegButton(enable = false)
         }else {
@@ -113,6 +113,9 @@ class Register : BaseFragment() {
     }
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 5
+    }
+    private fun isRepeatPasswordValid(password: String, repeatpassword: String): Boolean {
+        return password.equals(repeatpassword)
     }
 }
 private fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
