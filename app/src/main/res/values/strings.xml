@@ -26,4 +26,7 @@
     <string name="user_already_exist">Пользователь с таким именем уже зарегистрирован</string>
     <string name="registration_successful"> , вы успешно зарегестрированы</string>
     <string name="authorization_successful"> , вы успешно авторизованы</string>
+    <string name="if_loan_registred">Заявка принята на рассмотрение. В ближайшее время мы Вам сообщим о результате.</string>
+    <string name="if_loan_aproved">Заявка на займ одобрена! Для получения займа необходимо посетить офис банка и подписать договор.</string>
+    <string name="if_loan_rejected">Данная заявка отклонена.</string>
 </resources>

@@ -4,25 +4,26 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
+import androidx.fragment.app.Fragment
+import com.boyko.resultcftswagger.presenter.LoansPresenter
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.models.Loan
 import com.boyko.resultcftswagger.models.LoanConditions
 import com.boyko.resultcftswagger.models.LoanRequest
+import com.boyko.resultcftswagger.ui.itemfragment.CreatedNewLoan
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_create_new_loan.*
-import kotlinx.android.synthetic.main.login_fragment.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+private const val ARG_PARAM1 = "param1"
 
-class CreateNewLoan : BaseFragment() {
+class CreateNewLoan : Fragment() {
 
     private val api = Client.apiService
     private var sharedPref: SharedPreferences? = null
-
-    var listener: onClickFragmentListener?=null
-        set(value) {field=value}
+    private var presenter: LoansPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,13 +39,14 @@ class CreateNewLoan : BaseFragment() {
 
     interface onClickFragmentListener{
         fun created_new_loan(param1: String)
+        fun check_connect_and_run(f: () -> Unit)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        btn_update  .setOnClickListener { check_connect_and_run { get_LoanCond_ns()} }
-        btn_send    .setOnClickListener { check_connect_and_run { get_LoanRequest()} }
-        check_connect_and_run { get_LoanCond_ns()}
+        btn_update  .setOnClickListener { get_LoanCond_ns()}
+        btn_send    .setOnClickListener { get_LoanRequest() }
+        get_LoanCond_ns()
     }
 
     private fun get_LoanRequest() {
@@ -54,8 +56,8 @@ class CreateNewLoan : BaseFragment() {
         call?.enqueue(object : Callback<Loan?> {
             override fun onResponse(call: Call<Loan?>, response: Response<Loan?>) {
                 if (response.isSuccessful) {
-
-                    listener?.created_new_loan(Gson().toJson(response.body()))
+                    val fragment = CreatedNewLoan.newInstance(Gson().toJson(response.body()), presenter!!)
+                    presenter?.showFragmentLeft(fragment)
 
                 } else {
                     // обработать ошибки
@@ -100,5 +102,21 @@ class CreateNewLoan : BaseFragment() {
         tv_new_amount .setText(loancond?.maxAmount.toString())
         tv_new_percent.setText(loancond?.percent.toString())
         tv_new_period .setText(loancond?.period.toString())
+    }
+    companion object {
+        @JvmStatic
+        fun newInstance(param1: String, loansPresenter: LoansPresenter) =
+            CreateNewLoan().apply {
+                presenter = loansPresenter
+                arguments = Bundle().apply {
+                    putString(ARG_PARAM1, param1)
+                }
+            }
+
+            const val PREFS_NAME = "Bearer"
+            const val KEY_NAME = "Bearer"
+            const val ACCEPT ="*/*"
+            const val CONTENTTYPE ="application/json"
+
     }
 }

@@ -1,35 +1,44 @@
 package com.boyko.resultcftswagger.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
+import androidx.fragment.app.Fragment
+import com.boyko.resultcftswagger.ActivityLoans
+import com.boyko.resultcftswagger.LoginActivity
 import com.boyko.resultcftswagger.R
-import kotlinx.android.synthetic.main.login_fragment.*
-import kotlinx.android.synthetic.main.login_fragment.btn_login
-import kotlinx.android.synthetic.main.login_fragment.view.*
+import com.boyko.resultcftswagger.models.LoggedInUser
+import com.boyko.resultcftswagger.presenter.LoginPresenter
+import com.boyko.resultcftswagger.repositiry.LoginRepository
 import kotlinx.android.synthetic.main.registr_fragment.*
 
-class Register : BaseFragment() {
-    var listener: onClickFragmentListener?=null
-        set(value) {field=value}
+private const val ARG_PARAM1 = "param1"
+
+class Register : Fragment() {
+
+    var presenterF: LoginPresenter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view:View= inflater.inflate(R.layout.registr_fragment,container,false)
 
         val btnLogin = view.findViewById<Button>(R.id.btn_reg_login)
         val btn_reg_register = view.findViewById<Button>(R.id.btn_reg_register)
+
+        val loginRepository = context?.let { LoginRepository(it) }
+        val intent = Intent(context, ActivityLoans::class.java)
+
         btnLogin.setOnClickListener{
-            listener?.click_to_Login()
+            presenterF?.clickToLogin()
         }
         btn_reg_register.setOnClickListener {
-            listener?.clickRegistration()
+            loginRepository?.let {
+                presenterF?.clickRegistration(context!!, intent, activity as LoginActivity, userForReg(), it, getString(R.string.registration_successful), (getString(R.string.user_already_exist)))}
         }
         return view
     }
@@ -38,41 +47,50 @@ class Register : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         initViews()
     }
-
-    interface onClickFragmentListener{
-        fun clickRegistration()
-        fun click_to_Login()
+    private fun userForReg(): LoggedInUser {
+        return     LoggedInUser(editText_user_reg.text.toString(),editText_password_reg.text.toString())
     }
-    private fun showUsernameError() {
+
+    companion object {
+        @JvmStatic
+        fun newInstance(param1: String, presenter: LoginPresenter) =
+            Register().apply {
+                presenterF = presenter
+                arguments = Bundle().apply {
+                    putString(ARG_PARAM1, param1)
+                }
+            }
+    }
+    fun showUsernameError() {
         editText_user_reg.error = getString(R.string.invalid_username)
     }
-    private fun toggleRegButton(enable: Boolean) {
+    fun toggleRegButton(enable: Boolean) {
         btn_reg_register.isEnabled = enable
     }
-    private fun showPasswordError() {
+    fun showPasswordError() {
         editText_password_reg.error = getString(R.string.invalid_password)
     }
-    private fun showPasswordRepeatError() {
+    fun showPasswordRepeatError() {
         editText_password_repeat.error = getString(R.string.invalid_repeat_password)
     }
     private fun initViews() {
 
         editText_user_reg.afterTextChanged {
-            onLoginDataUpdated(
+            presenterF?.onLoginDataUpdated(
                     editText_user_reg.text.toString(),
                     editText_password_reg.text.toString(),
                     editText_password_repeat.text.toString()
             )
         }
         editText_password_reg.afterTextChanged {
-            onLoginDataUpdated(
+            presenterF?.onLoginDataUpdated(
                     editText_user_reg.text.toString(),
                     editText_password_reg.text.toString(),
                     editText_password_repeat.text.toString()
             )
         }
         editText_password_repeat.afterTextChanged {
-                onLoginDataUpdated(
+            presenterF?.onLoginDataUpdated(
                         editText_user_reg.text.toString(),
                         editText_password_reg.text.toString(),
                         editText_password_repeat.text.toString()
@@ -80,33 +98,33 @@ class Register : BaseFragment() {
             }
     }
 
-    private fun onLoginDataUpdated(username: String, password: String, passwordrepeat: String) {
-        if (!isUserNameValid(username)) {
-            showUsernameError()
-            toggleRegButton(enable = false)
-        } else if (!isPasswordValid(password)) {
-            showPasswordError()
-            toggleRegButton(enable = false)
-        } else if (!isRepeatPasswordValid(password, passwordrepeat)) {
-            showPasswordRepeatError()
-            toggleRegButton(enable = false)
-        }else {
-            toggleRegButton(enable = true)
-        }
-    }
-    private fun isUserNameValid(username: String): Boolean {
-        return if (username.isNotBlank() && username.contains('@')) {
-            Patterns.EMAIL_ADDRESS.matcher(username).matches()
-        } else {
-            false
-        }
-    }
-    private fun isPasswordValid(password: String): Boolean {
-        return password.length > 5
-    }
-    private fun isRepeatPasswordValid(password: String, repeatpassword: String): Boolean {
-        return password.equals(repeatpassword)
-    }
+//    private fun onLoginDataUpdated(username: String, password: String, passwordrepeat: String) {
+//        if (!isUserNameValid(username)) {
+//            showUsernameError()
+//            toggleRegButton(enable = false)
+//        } else if (!isPasswordValid(password)) {
+//            showPasswordError()
+//            toggleRegButton(enable = false)
+//        } else if (!isRepeatPasswordValid(password, passwordrepeat)) {
+//            showPasswordRepeatError()
+//            toggleRegButton(enable = false)
+//        }else {
+//            toggleRegButton(enable = true)
+//        }
+//    }
+//    private fun isUserNameValid(username: String): Boolean {
+//        return if (username.isNotBlank() && username.contains('@')) {
+//            Patterns.EMAIL_ADDRESS.matcher(username).matches()
+//        } else {
+//            false
+//        }
+//    }
+//    private fun isPasswordValid(password: String): Boolean {
+//        return password.length > 5
+//    }
+//    private fun isRepeatPasswordValid(password: String, repeatpassword: String): Boolean {
+//        return password.equals(repeatpassword)
+//    }
 }
 
 private fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {

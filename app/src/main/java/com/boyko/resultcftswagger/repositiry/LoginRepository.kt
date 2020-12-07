@@ -1,7 +1,6 @@
 package com.boyko.resultcftswagger.repositiry
 
 import android.content.Context
-import com.boyko.resultcftswagger.ui.BaseActivity
 
 private const val PREFS_NAME = "Bearer"
 private const val KEY_NAME = "Bearer"
@@ -18,7 +17,7 @@ class LoginRepository (val context: Context){
     }
 
     fun authorization(bearer: String?) {
-        val editor = context.getSharedPreferences(BaseActivity.PREFS_NAME, Context.MODE_PRIVATE)?.edit()
+        val editor = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)?.edit()
         editor?.putString(KEY_NAME, bearer)
         editor?.apply()
     }

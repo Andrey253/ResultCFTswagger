@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import com.boyko.resultcftswagger.presenter.LoansPresenter
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.models.Loan
 import com.google.gson.Gson
@@ -39,6 +40,8 @@ class LoanItem : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    private var presenter: LoansPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,13 +76,22 @@ class LoanItem : Fragment() {
     }
 
     private fun setColorStatus(state: String?) {
-        when(state){
-            REGISTERED ->   {   tv_item_state.setBackgroundColor(Color.CYAN)
-                                tv_item_state1.setBackgroundColor(Color.CYAN)}
-            APPROVED ->     {   tv_item_state.setBackgroundColor(Color.GREEN)
-                                tv_item_state1.setBackgroundColor(Color.GREEN)}
-            REJECTED ->     {   tv_item_state.setBackgroundColor(Color.RED)
-                                tv_item_state1.setBackgroundColor(Color.RED)}
+        when (state) {
+            REGISTERED -> {
+                tv_item_state.setBackgroundColor(Color.CYAN)
+                tv_item_state1.setBackgroundColor(Color.CYAN)
+                tv_item_instruction.text = getString(R.string.if_loan_registred)
+            }
+            APPROVED -> {
+                tv_item_state.setBackgroundColor(Color.GREEN)
+                tv_item_state1.setBackgroundColor(Color.GREEN)
+                tv_item_instruction.text = getString(R.string.if_loan_aproved)
+            }
+            REJECTED -> {
+                tv_item_state.setBackgroundColor(Color.RED)
+                tv_item_state1.setBackgroundColor(Color.RED)
+                tv_item_instruction.text = getString(R.string.if_loan_rejected)
+            }
 
         }
     }
@@ -106,9 +118,9 @@ class LoanItem : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(param1: String) =
                 LoanItem().apply {
-                    arguments = Bundle().apply {
+                     arguments = Bundle().apply {
                         putString(ARG_PARAM1, param1)
                         putString(ARG_PARAM2, param2)
                     }

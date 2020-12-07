@@ -8,9 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
+import com.boyko.resultcftswagger.presenter.LoansPresenter
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.models.Loan
-import com.boyko.resultcftswagger.ui.*
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_loan_item.tv_item_amount
 import kotlinx.android.synthetic.main.fragment_loan_item.tv_item_name
@@ -27,11 +28,10 @@ private const val APPROVED = "APPROVED"
 private const val REJECTED = "REJECTED"
 private const val REGISTERED = "REGISTERED"
 
-class CreatedNewLoan : BaseFragment() {
+class CreatedNewLoan : Fragment() {
 
     private var param1: String? = null
-    var listener: onClickFragmentListener?=null
-        set(value) {field=value}
+    private var presenter: LoansPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,9 +47,8 @@ class CreatedNewLoan : BaseFragment() {
     }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val btn = this.view?.findViewById<Button>(R.id.btn_to_main)
-        btn?.setOnClickListener {
-            listener?.click_to_main()}
+        val btn = view?.findViewById<Button>(R.id.btn_to_main)
+        btn?.setOnClickListener {presenter?.clickToMain()}
     }
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -79,14 +78,12 @@ class CreatedNewLoan : BaseFragment() {
 
         }
     }
-    interface onClickFragmentListener{
-        fun click_to_main()
-    }
 
     companion object {
         @JvmStatic
-        fun newInstance(param1: String) =
+        fun newInstance(param1: String, loansPresenter: LoansPresenter) =
                 CreatedNewLoan().apply {
+                    presenter = loansPresenter
                     arguments = Bundle().apply {
                         putString(ARG_PARAM1, param1)
                     }

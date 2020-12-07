@@ -5,5 +5,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/main_container"
-    tools:context="com.boyko.resultcftswagger.MainActivity"
+    tools:context="com.boyko.resultcftswagger.LoginActivity"
     android:background="@color/button_background"/>

@@ -52,10 +52,13 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     //retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.2'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     //timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
     //converter-scalars
     implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
     //constraint
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
+
 }

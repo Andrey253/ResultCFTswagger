@@ -1,6 +1,7 @@
 package com.boyko.resultcftswagger.api
 
 import com.boyko.resultcftswagger.models.*
+import io.reactivex.Observable
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -32,6 +33,6 @@ interface ApiService {
     @GET("/loans/all")
     fun getLoansAll(
             @Header ("accept") accept: String,
-            @Header ("Authorization") auth: String) : Call<List<Loan>>
+            @Header ("Authorization") auth: String) : Observable<List<Loan>>
 
 }

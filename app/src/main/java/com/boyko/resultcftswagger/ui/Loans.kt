@@ -10,91 +10,128 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.boyko.resultcftswagger.MainActivity
+import com.boyko.resultcftswagger.presenter.LoansPresenter
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.adapter.Adapter
 import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.models.Loan
 import com.boyko.resultcftswagger.ui.itemfragment.LoanItem
-import com.google.gson.Gson
+import com.boyko.resultcftswagger.util.InternetConnection
+import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.loans_fragment.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+private const val ARG_PARAM1 = "param1"
 
-class Loans : BaseFragment() {
+class Loans : Fragment() {
 
     private val api = Client.apiService
     private var sharedPref: SharedPreferences? = null
     lateinit var mLoanItemFragment: LoanItem
     lateinit var myAdapter: Adapter
     var listLoan = listOf<Loan>()
+    private var param1: String? = null
 
-    var listener: onClickFragmentListener?=null
-        set(value) {field=value}
+    private var presenter: LoansPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        arguments?.let {
+            param1 = it.getString(ARG_PARAM1)
+        }
         sharedPref = context?.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        send_getLoansAll()
+        Log.e("mytag", "Loans created ")
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.loans_fragment, container, false)
     }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        btn_req_loan_cond.setOnClickListener {listener?.create_new_loan()}
-        fab.setOnClickListener { send_getLoansAll() }
+        btn_req_loan_cond.setOnClickListener {
 
-        recycleCreate(listLoan)
-    }
-
-    fun send_getLoansAll() {
-        if (isConnect())
-            getLoansAll()
-        else
-            Toast.makeText(context, getString(R.string.no_connection), Toast.LENGTH_LONG).show()
-    }
-
-    fun getLoansAll() {
-        val bearer: String? = sharedPref?.getString(KEY_NAME, null)
-        bearer?.let {
-            progressON()
-            val call = api.getLoansAll(ACCEPT, it)
-            call.enqueue(object : Callback<List<Loan>> {
-                override fun onResponse(call: Call<List<Loan>?>, response: Response<List<Loan>?>) {
-                    if (response.isSuccessful) {
-                        progressOFF()
-                        response.body()?.let {
-                            listLoan = it
-                            myAdapter.update(it)
-                        }
-                    } else {
-                        // обработать ошибки
-                    }
-                }
-                override fun onFailure(call: Call<List<Loan>?>, t: Throwable) {
-                    // обработать ошибки
-                }
-            })
+            presenter?.showCreateNewLoan()
         }
+        fab.setOnClickListener {getLoansAll() }
+
+            recycleViewCreate(listLoan)
+            getLoansAll()
+
+
     }
-    private fun recycleCreate(listLoan: List<Loan>) {
+    fun recycleViewCreate(listLoan: List<Loan>) {
         recyclerview.layoutManager = LinearLayoutManager(context)
         myAdapter = Adapter(listLoan, object : Adapter.Callback {
             override fun onItemClicked(item: Loan) {
-                mLoanItemFragment = LoanItem.newInstance(Gson().toJson(item), "")
-                showFragment(mLoanItemFragment)
+
+                presenter?.showItemLoan(item)
             }
         })
         recyclerview.adapter = myAdapter
     }
-    interface onClickFragmentListener{
-        fun create_new_loan()
+
+    fun getLoansAll() {
+        if (isConnect()){
+            val sharedPref = context?.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            val bearer: String? = sharedPref?.getString(KEY_NAME, null)
+            bearer?.let {
+                progressBar.setVisibility(View.VISIBLE)
+                val call = api.getLoansAll(ACCEPT, it)
+                call
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(object : Observer<List<Loan>> {
+
+                        override fun onSubscribe(d: Disposable) {
+                            Log.e("mytag", "onSubscribe " + d.toString())}
+                        override fun onNext(listLoanCall: List<Loan>) {
+                            progressBar.setVisibility(View.INVISIBLE)
+                            listLoan = listLoanCall
+                            myAdapter.update(listLoanCall)
+                        }
+
+                        override fun onError(e: Throwable) {
+                            Log.e("mytag", "onError" + e.toString())}
+                        override fun onComplete() {
+                            Log.e("mytag", "onComplete")}
+                    })
+            }
+        }
+
+        else {
+            progressBar.setVisibility(View.VISIBLE)
+            Toast.makeText(context, getString(R.string.no_connection), Toast.LENGTH_LONG).show()
+        }
     }
+    private fun isConnect(): Boolean{
+        return InternetConnection.checkConnection(context)
+    }
+    companion object {
+        @JvmStatic
+        fun newInstance(param1: String, loansPresenter: LoansPresenter) =
+            Loans().apply {
+                presenter = loansPresenter
+                arguments = Bundle().apply {
+                    putString(ARG_PARAM1, param1)
+                }
+            }
+            const val PREFS_NAME = "Bearer"
+            const val KEY_NAME = "Bearer"
+            const val ACCEPT ="*/*"
+            const val CONTENTTYPE ="application/json"
+    }
+//    override fun check_connect_and_run(f: () -> Unit){
+//        if (isConnect())
+//            f()
+//        else {
+//            progressOFF()
+//            Toast.makeText(applicationContext, getString(R.string.no_connection), Toast.LENGTH_LONG).show()
+//        }
+//    }
 }
