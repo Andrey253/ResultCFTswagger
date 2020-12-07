@@ -23,12 +23,12 @@ interface ApiService {
     fun postGetLoans(
             @Header ("accept") accept: String,
             @Header ("Authorization") auth: String,
-            @Body loanRequest: LoanRequest): Call<Loan>
+            @Body loanRequest: LoanRequest): Observable<Loan>
 
     @GET("/loans/conditions")
     fun getLoansConditions(
             @Header ("accept") accept: String,
-            @Header ("Authorization") auth: String) : Call<LoanConditions>
+            @Header ("Authorization") auth: String) : Observable<LoanConditions>
 
     @GET("/loans/all")
     fun getLoansAll(

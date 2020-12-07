@@ -47,6 +47,9 @@ class Loans : Fragment() {
         mLoanItemFragment = LoanItem()
     }
 
+    fun err(){
+        Toast.makeText(context,"Сервер не отвечал 10 секунд, повторите попытку позже", Toast.LENGTH_LONG).show()
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,15 +60,13 @@ class Loans : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val loginRepository = context?.let { LoginRepository(it) }
-
         btn_req_loan_cond.setOnClickListener {
 
             presenter?.showCreateNewLoan()
         }
-        fab.setOnClickListener {context?.let {  presenter?.getAllLoans(context!!, loginRepository!!, "", "", getString(R.string.no_connection)) }}
+        fab.setOnClickListener {context?.let {  presenter?.getAllLoans(context!!,"", "", getString(R.string.no_connection)) }}
             recycleViewCreate(listLoan)
-            presenter?.getAllLoans(context!!, loginRepository!!, "", "", getString(R.string.no_connection))
+            presenter?.getAllLoans(context!!, "", "", getString(R.string.no_connection))
 
 
     }
