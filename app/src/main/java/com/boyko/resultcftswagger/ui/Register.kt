@@ -97,34 +97,6 @@ class Register : Fragment() {
                 )
             }
     }
-
-//    private fun onLoginDataUpdated(username: String, password: String, passwordrepeat: String) {
-//        if (!isUserNameValid(username)) {
-//            showUsernameError()
-//            toggleRegButton(enable = false)
-//        } else if (!isPasswordValid(password)) {
-//            showPasswordError()
-//            toggleRegButton(enable = false)
-//        } else if (!isRepeatPasswordValid(password, passwordrepeat)) {
-//            showPasswordRepeatError()
-//            toggleRegButton(enable = false)
-//        }else {
-//            toggleRegButton(enable = true)
-//        }
-//    }
-//    private fun isUserNameValid(username: String): Boolean {
-//        return if (username.isNotBlank() && username.contains('@')) {
-//            Patterns.EMAIL_ADDRESS.matcher(username).matches()
-//        } else {
-//            false
-//        }
-//    }
-//    private fun isPasswordValid(password: String): Boolean {
-//        return password.length > 5
-//    }
-//    private fun isRepeatPasswordValid(password: String, repeatpassword: String): Boolean {
-//        return password.equals(repeatpassword)
-//    }
 }
 
 private fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
