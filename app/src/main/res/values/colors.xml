@@ -13,4 +13,8 @@
     <color name="colorGrey">#837E7E</color>
 
     <color name="button_background">#FFFFB0</color>
+    <color name="bg_edit">#CCF8C8C8</color>
+    <color name="item_loan_bg_registred">#9A9FFF</color>
+    <color name="item_loan_bg_aproved">#FF00FF00</color>
+    <color name="item_loan_bg_rejected">#FFFF0000</color>
 </resources>

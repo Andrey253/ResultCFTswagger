@@ -7,6 +7,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.boyko.resultcftswagger.ActivityLoans
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.models.Loan
@@ -33,27 +34,25 @@ import java.util.concurrent.TimeUnit
 class LoansPresenterImpl(private val loginRepository: LoginRepository, val fragmentManager: FragmentManager) :
     LoansPresenter {
 
-    private var viewLoans           : Loans? = null
+    private var mLoans              : Loans? = null
     private var viewLoanItem        : LoanItem? = null
     private var viewCreateNewLoan   : CreateNewLoan? = null
-    private var listLoan = listOf<Loan>()
+
+
     private val api = Client.apiService
-
-
 
     override fun attachView(
             viewLoans: Loans,
             viewCreateNewLoan: CreateNewLoan
 
     ) {
-        this.viewLoans          = viewLoans
-        this.viewLoanItem       = viewLoanItem
+        this.mLoans             = viewLoans
+       // this.viewLoanItem       = viewLoanItem
         this.viewCreateNewLoan  = viewCreateNewLoan
-
     }
 
     override fun detachView() {
-        this.viewLoans          = null
+        this.mLoans          = null
         this.viewLoanItem       = null
         this.viewCreateNewLoan  = null
 
@@ -78,7 +77,7 @@ class LoansPresenterImpl(private val loginRepository: LoginRepository, val fragm
     }
 
     override fun clickToMain() {
-        viewLoans?.let { showFragmentRight(it) }
+        mLoans?.let { showFragmentRight(it) }
     }
 
     override fun showItemLoan(loan: Loan) {
@@ -90,12 +89,13 @@ class LoansPresenterImpl(private val loginRepository: LoginRepository, val fragm
     }
 
     override fun getAllLoans(context: Context, toast: String) {
+        Log.e("mytag", "getAllLoans")
         if (isConnect(context)){
-            val sharedPref = context.getSharedPreferences(Loans.PREFS_NAME, Context.MODE_PRIVATE)
-            val bearer: String? = sharedPref?.getString(Loans.KEY_NAME, null)
+            val sharedPref = context.getSharedPreferences(ActivityLoans.PREFS_NAME, Context.MODE_PRIVATE)
+            val bearer: String? = sharedPref?.getString(ActivityLoans.KEY_NAME, null)
             bearer?.let {
-                viewLoans?.progressBar?.setVisibility(View.VISIBLE)
-                val call = api.getLoansAll(Loans.ACCEPT, it)
+               if( mLoans != null) mLoans?.progressBar?.setVisibility(View.VISIBLE)
+                val call = api.getLoansAll(ActivityLoans.ACCEPT, it)
                 call
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
@@ -105,13 +105,13 @@ class LoansPresenterImpl(private val loginRepository: LoginRepository, val fragm
                              }
 
                             override fun onNext(listLoanCall: List<Loan>) {
-                                viewLoans?.progressBar?.setVisibility(View.INVISIBLE)
-                                listLoan = listLoanCall
-                                viewLoans?.myAdapter?.update(listLoanCall)
+                                if( mLoans != null) mLoans?.progressBar?.setVisibility(View.INVISIBLE)
+                                mLoans?.listLoan = listLoanCall
+                                mLoans?.myAdapter?.update(listLoanCall)
                             }
 
                             override fun onError(e: Throwable) {
-                                viewLoans?.progressBar?.setVisibility(View.INVISIBLE)
+                                if( mLoans != null) mLoans?.progressBar?.setVisibility(View.INVISIBLE)
 
                             }
 
@@ -120,16 +120,16 @@ class LoansPresenterImpl(private val loginRepository: LoginRepository, val fragm
                         })
             }
         } else {
-            viewLoans?.progressBar?.setVisibility(View.INVISIBLE)
+            if( mLoans != null) mLoans?.progressBar?.setVisibility(View.INVISIBLE)
             Toast.makeText(context, toast, Toast.LENGTH_LONG).show()
         }
     }
     override fun loanConditionsRequest(context: Context, toast: String) {
         if (isConnect(context)) {
-            val sharedPref = context.getSharedPreferences(Loans.PREFS_NAME, Context.MODE_PRIVATE)
-            val bearer: String? = sharedPref?.getString(Loans.KEY_NAME, null)
+            val sharedPref = context.getSharedPreferences(ActivityLoans.PREFS_NAME, Context.MODE_PRIVATE)
+            val bearer: String? = sharedPref?.getString(ActivityLoans.KEY_NAME, null)
             bearer?.let {
-                val call = api.getLoansConditions(Loans.ACCEPT, it)
+                val call = api.getLoansConditions(ActivityLoans.ACCEPT, it)
                 call
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
@@ -160,10 +160,10 @@ class LoansPresenterImpl(private val loginRepository: LoginRepository, val fragm
     }
     override fun loanRequest(context: Context, loanRequest: LoanRequest, presenter: LoansPresenter, toast: String) {
         if (isConnect(context)) {
-            val sharedPref = context.getSharedPreferences(Loans.PREFS_NAME, Context.MODE_PRIVATE)
-            val bearer: String? = sharedPref?.getString(Loans.KEY_NAME, null)
+            val sharedPref = context.getSharedPreferences(ActivityLoans.PREFS_NAME, Context.MODE_PRIVATE)
+            val bearer: String? = sharedPref?.getString(ActivityLoans.KEY_NAME, null)
             bearer?.let {
-                val call = api.postGetLoans(Loans.ACCEPT, it, loanRequest)
+                val call = api.postGetLoans(ActivityLoans.ACCEPT, it, loanRequest)
                 call
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())

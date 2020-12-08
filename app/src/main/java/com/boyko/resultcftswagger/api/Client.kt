@@ -13,14 +13,14 @@ class Client {
     companion object {
 
         private const val ROOT_URL = "http://focusapp-env.eba-xm2atk2z.eu-central-1.elasticbeanstalk.com"
-        var gson = GsonBuilder()
+        private val builder = GsonBuilder()
                 .setLenient()
                 .create()
         private val retrofitInstance: Retrofit
         get() = Retrofit.Builder()
                 .baseUrl(ROOT_URL)
                 .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(GsonConverterFactory.create(builder))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
         val apiService: ApiService

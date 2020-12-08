@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:columnCount="2"
-    android:padding="@dimen/paddingnormalTextView"
+    android:padding="@dimen/padding_normal_TextView"
     android:orientation="vertical"
     android:background="@color/button_background">
     <LinearLayout
@@ -15,8 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:columnCount="2"
-            android:padding="@dimen/paddingnormalTextView">
+            android:columnCount="2">
             <TextView
                 android:id="@+id/tv_item_desc"
                 android:layout_height="40dp"
@@ -34,21 +33,21 @@
                 android:text="Имя" />
 
             <EditText
-                android:id="@+id/tv_new_firstname"
+                android:id="@+id/tv_new_first_name"
                 style="@style/normalText"
                 android:layout_columnSpan="1"
                 android:layout_columnWeight="5"
                 android:hint="Введите Имя"/>
 
             <TextView
-                android:id="@+id/tv_new_lastname1"
+                android:id="@+id/tv_new_last_name1"
                 style="@style/normalText"
                 android:layout_columnSpan="1"
                 android:layout_columnWeight="1"
                 android:text="Фамилия" />
 
             <EditText
-                android:id="@+id/tv_new_lastname"
+                android:id="@+id/tv_new_last_name"
                 android:layout_columnWeight="1"
                 android:layout_columnSpan="1"
                 android:hint="Введите Фамилию"

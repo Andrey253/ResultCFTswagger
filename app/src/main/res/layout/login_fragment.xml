@@ -49,7 +49,7 @@
 
     <Button
         android:id="@+id/btn_register"
-        android:text="registeration"
+        android:text="@string/registeration"
         android:layout_below="@+id/btn_login"
         android:background="@drawable/bg_button"
         style="@style/Buttons" />

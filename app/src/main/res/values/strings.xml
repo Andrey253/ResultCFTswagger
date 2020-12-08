@@ -27,6 +27,21 @@
     <string name="registration_successful"> , вы успешно зарегестрированы</string>
     <string name="authorization_successful"> , вы успешно авторизованы</string>
     <string name="if_loan_registred">Заявка принята на рассмотрение. В ближайшее время мы Вам сообщим о результате.</string>
-    <string name="if_loan_aproved">Заявка на займ одобрена! Для получения займа необходимо посетить офис банка и подписать договор.</string>
+    <string name="if_loan_aproved">Заявка на займ одобрена! Для получения займа необходимо посетить офис банка и подписать договор.
+        \nНаши контакты:
+        \nг. Томск\n Мусы Джалиля, д. 11
+        \n+ 7 383 335-80-88, 336-49-49
+        \npersonal@cft.ru</string>
     <string name="if_loan_rejected">Данная заявка отклонена.</string>
+    <string name="status_REGISTRED">ЗАРЕГИСТРИРОВАНО</string>
+    <string name="status_APPROVED">ОДОБРЕНО</string>
+    <string name="status_REJECTED">ОТКЛОНЕНА</string>
+    <string name="status_ERRORINLOAN">ОШИБКА В ЗАЯВКЕ</string>
+    <string name="item_loan_period">срок,\nмесяцев</string>
+    <string name="item_loan_status">статус</string>
+    <string name="item_loan_rercent">% \n годовых</string>
+    <string name="item_loan_amount">Сумма</string>
+    <string name="registeration">регистрация</string>
+    <string name="action_darck">Темная тема</string>
+    <string name="action_light">Светлая тема</string>
 </resources>

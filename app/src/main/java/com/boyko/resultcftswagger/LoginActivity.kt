@@ -72,8 +72,4 @@ class LoginActivity: AppCompatActivity(), LoginView{
             .replace(R.id.main_container,fragment, fragment.javaClass.name)
             .commit()
     }
-    companion object{
-        const val ACCEPT ="*/*"
-        const val CONTENTTYPE ="application/json"
-    }
 }

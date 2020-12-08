@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:columnCount="2"
-    android:padding="@dimen/paddingnormalTextView"
+    android:padding="@dimen/padding_normal_TextView"
     android:orientation="vertical"
     android:background="@color/button_background"
     tools:context=".ui.itemfragment.LoanItem">
@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:columnCount="2"
-            android:padding="@dimen/paddingnormalTextView"
+            android:padding="@dimen/padding_normal_TextView"
             android:orientation="horizontal"
             android:background="@color/button_background">
 

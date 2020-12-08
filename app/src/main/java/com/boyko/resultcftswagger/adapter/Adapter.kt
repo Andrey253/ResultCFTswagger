@@ -16,7 +16,7 @@ private const val REGISTERED = "REGISTERED"
 class Adapter(var items: List<Loan>, val callback: Callback) : RecyclerView.Adapter<Adapter.MainHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
-            = MainHolder(LayoutInflater.from(parent.context).inflate(R.layout.loan_item_top, parent, false))
+            = MainHolder(LayoutInflater.from(parent.context).inflate(R.layout.loan_item, parent, false))
 
     override fun getItemCount() = items.size
 
@@ -36,9 +36,9 @@ class Adapter(var items: List<Loan>, val callback: Callback) : RecyclerView.Adap
             persrnt.text = item.percent.toString()
             period.text = item.period.toString()
             when(item.state){
-                REGISTERED-> state.text = "ЗАРЕГИСТРИРОВАН"
-                APPROVED ->  state.text = "ОДОБРЕН"
-                REJECTED ->  state.text = "ОТКЛОНЕН"
+                REGISTERED-> state.text = "ЗАРЕГИСТРИРОВАНО"
+                APPROVED ->  state.text = "ОДОБРЕНО"
+                REJECTED ->  state.text = "ОТКЛОНЕНА"
                 else -> state.text = "ОШИБКА В ЗАЯВКЕ"
             }
             itemView.setOnClickListener {
@@ -59,8 +59,8 @@ class Adapter(var items: List<Loan>, val callback: Callback) : RecyclerView.Adap
         fun onItemClicked(item: Loan)
     }
 
-    fun update(newlist: List<Loan>) {
-        items = newlist
+    fun update(listLoan: List<Loan>) {
+        items = listLoan
         notifyDataSetChanged()
     }
 }

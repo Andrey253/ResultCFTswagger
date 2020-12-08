@@ -3,57 +3,45 @@ package com.boyko.resultcftswagger.presenter
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.provider.Settings.Global.getString
-import android.util.Log
 import android.util.Patterns
-import android.widget.Button
 import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.boyko.resultcftswagger.ActivityLoans
 import com.boyko.resultcftswagger.LoginActivity
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.models.LoggedInUser
 import com.boyko.resultcftswagger.models.UserEntity
 import com.boyko.resultcftswagger.repositiry.LoginRepository
-import com.boyko.resultcftswagger.ui.CreateNewLoan
-import com.boyko.resultcftswagger.ui.Loans
 import com.boyko.resultcftswagger.ui.Login
 import com.boyko.resultcftswagger.ui.Register
-import com.boyko.resultcftswagger.ui.itemfragment.LoanItem
-import com.boyko.resultcftswagger.util.InternetConnection
-import kotlinx.android.synthetic.main.registr_fragment.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
-private const val ARG_PARAM1 = "param1"
 class LoginPresenterImpl(private val loginRepository: LoginRepository, private val fManager: FragmentManager): LoginPresenter{
 
-    private var viewLogin : Login? = null
-    private var viewRegis : Register? = null
-    private var loginActivity : LoginActivity? = null
+    private var mLogin : Login? = null
+    private var mRegis : Register? = null
+    private var mLoginActivity : LoginActivity? = null
     private val api = Client.apiService
-
-    //private var viewRegis : Register? = null
-
 
     override fun attachView(
         viewLogin         : Login,
         viewRegis         : Register,
-        loginActivity : LoginActivity
+        loginActivity     : LoginActivity
         ) {
-        this.viewLogin    = viewLogin
-        this.viewRegis    = viewRegis
-        this.loginActivity= loginActivity
+        this.mLogin         = viewLogin
+        this.mRegis         = viewRegis
+        this.mLoginActivity = loginActivity
     }
 
     override fun detachView() {
-        this.viewLogin    = null
-        this.viewRegis    = null
-        this.loginActivity= null
+        this.mLogin        = null
+        this.mRegis        = null
+        this.mLoginActivity= null
     }
 
 
@@ -65,48 +53,60 @@ class LoginPresenterImpl(private val loginRepository: LoginRepository, private v
             context: Context,
             intent: Intent,
             activity: Activity,
-            user: LoggedInUser,
+            userLoggedInUser: LoggedInUser,
             loginRepository: LoginRepository,
             s1: String, s2:String) {
 
-        api.postLogin(LoginActivity.ACCEPT, LoginActivity.CONTENTTYPE, user)
-                .enqueue(object : Callback<String?> {
-                    override fun onResponse(call: Call<String?>, response: Response<String?>) {
-                        if (response.isSuccessful) {
-
-                            loginRepository.authorization(response.body())
-                            context.startActivity(intent)
-                            activity.finish()
-
-                            Toast.makeText(context, (user.name + s1), Toast.LENGTH_LONG).show()
-                        } else {
-                            Toast.makeText(context, s2, Toast.LENGTH_LONG).show()
-                        }
+        api.postLogin(ACCEPT, CONTENTTYPE, userLoggedInUser)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .timeout(7, TimeUnit.SECONDS)
+                .subscribe(object : Observer<String> {
+                    override fun onSubscribe(d: Disposable) {
                     }
-                    override fun onFailure(call: Call<String?>, t: Throwable) {
+
+                    override fun onNext(authKey: String) {
+                        loginRepository.authorization(authKey)
+                        context.startActivity(intent)
+                        activity.finish()
+                        Toast.makeText(context, (userLoggedInUser.name + s1), Toast.LENGTH_LONG).show()
+                    }
+
+                    override fun onError(e: Throwable) {
+
+
+                    }
+
+                    override fun onComplete() {
                     }
                 })
-
-        //check_connect_and_run { login_send_post(intent, userCreate(), loginRepository) }
     }
 
-    override fun clickRegistration(context: Context, intent: Intent, activity: Activity, userReg: LoggedInUser, loginRepository: LoginRepository, s1: String, s2:String) {
-        api.postReg(LoginActivity.ACCEPT, LoginActivity.CONTENTTYPE, userReg)
-                .enqueue(object : Callback<UserEntity?> {
-                    override fun onResponse(call: Call<UserEntity?>, response: Response<UserEntity?>) {
-                        if (response.isSuccessful) {
-                            Toast.makeText(context, response.body()?.name + s1, Toast.LENGTH_LONG).show()
-                            clickLogin(context, intent, activity, userReg, loginRepository, s1, s2)
-                        } else {
-                            Toast.makeText(context, s2, Toast.LENGTH_LONG).show()
-                        }
+    override fun clickRegistration(context: Context, intent: Intent, activity: Activity, userLoggedInUser: LoggedInUser, loginRepository: LoginRepository, s1: String, s2:String) {
+        api.postReg(ACCEPT, CONTENTTYPE, userLoggedInUser)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .timeout(7, TimeUnit.SECONDS)
+                .subscribe(object : Observer<UserEntity> {
+                    override fun onSubscribe(d: Disposable) {
                     }
-                    override fun onFailure(call: Call<UserEntity?>, t: Throwable) {}
+
+                    override fun onNext(userEntity: UserEntity) {
+                        Toast.makeText(context, userEntity.name + s1, Toast.LENGTH_LONG).show()
+                         clickLogin(context, intent, activity, userLoggedInUser, loginRepository, s1, s2)
+                    }
+
+                    override fun onError(e: Throwable) {
+                        Toast.makeText(context, s2, Toast.LENGTH_LONG).show()
+                    }
+
+                    override fun onComplete() {
+                    }
                 })
-        //check_connect_and_run { reg_send_post(intent,loginRepository) }
     }
+
     override fun clickToLogin() {
-        viewLogin?.let { showFragment_right(it) }
+        mLogin?.let { showFragment_right(it) }
     }
 
     fun showFragment_right(fragment: Fragment) {
@@ -117,7 +117,7 @@ class LoginPresenterImpl(private val loginRepository: LoginRepository, private v
             .commit()
     }
     override fun clickToRegistration() {
-        viewRegis?.let { showFragment_right(it) }
+        mRegis?.let { showFragment_right(it) }
     }
 //    fun check_connect_and_run(f: () -> Unit){
 //        if (isConnect())
@@ -137,16 +137,16 @@ class LoginPresenterImpl(private val loginRepository: LoginRepository, private v
         passwordrepeat: String
     ) {
         if (!isUserNameValid(username)) {
-            viewRegis?.showUsernameError()
-            viewRegis?.toggleRegButton(enable = false)
+            mRegis?.showUsernameError()
+            mRegis?.toggleRegButton(enable = false)
         } else if (!isPasswordValid(password)) {
-            viewRegis?.showPasswordError()
-            viewRegis?.toggleRegButton(enable = false)
+            mRegis?.showPasswordError()
+            mRegis?.toggleRegButton(enable = false)
         } else if (!isRepeatPasswordValid(password, passwordrepeat)) {
-            viewRegis?.showPasswordRepeatError()
-            viewRegis?.toggleRegButton(enable = false)
+            mRegis?.showPasswordRepeatError()
+            mRegis?.toggleRegButton(enable = false)
         } else {
-            viewRegis?.toggleRegButton(enable = true)
+            mRegis?.toggleRegButton(enable = true)
         }
     }
 
@@ -162,5 +162,9 @@ class LoginPresenterImpl(private val loginRepository: LoginRepository, private v
     }
     private fun isRepeatPasswordValid(password: String, repeatpassword: String): Boolean {
         return password.equals(repeatpassword)
+    }
+    companion object{
+        const val ACCEPT ="*/*"
+        const val CONTENTTYPE ="application/json"
     }
 }

@@ -48,17 +48,17 @@ class CreateNewLoan : Fragment() {
     private fun createLoanRequestObject(): LoanRequest{
         return LoanRequest(
                 amount = tv_new_amount.text.toString().toInt(),
-                firstName = tv_new_firstname.text.toString(),
-                lastName = tv_new_lastname.text.toString(),
+                firstName = tv_new_first_name.text.toString(),
+                lastName = tv_new_last_name.text.toString(),
                 percent = tv_new_percent.text.toString().toDouble(),
                 period = tv_new_period.text.toString().toInt(),
                 phoneNumber = tv_new_phone.text.toString())
     }
 
-    fun setFieldItemLoanFragment(loancond: LoanConditions?) {
-        tv_new_amount .setText(loancond?.maxAmount.toString())
-        tv_new_percent.setText(loancond?.percent.toString())
-        tv_new_period .setText(loancond?.period.toString())
+    fun setFieldItemLoanFragment(loanConditions: LoanConditions?) {
+        tv_new_amount .setText(loanConditions?.maxAmount.toString())
+        tv_new_percent.setText(loanConditions?.percent.toString())
+        tv_new_period .setText(loanConditions?.period.toString())
     }
     companion object {
         @JvmStatic

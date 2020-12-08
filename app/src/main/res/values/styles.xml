@@ -17,11 +17,11 @@
     <style name="normalText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingBottom">@dimen/paddingnormalTextView</item>
-        <item name="android:paddingTop">@dimen/paddingnormalTextView</item>
+        <item name="android:paddingBottom">@dimen/padding_normal_TextView</item>
+        <item name="android:paddingTop">@dimen/padding_normal_TextView</item>
         <item name="android:textSize">@dimen/normalText</item>
         <item name="android:textColor">@color/colorBlack</item>
-        <item name="android:padding">@dimen/paddingnormalTextView</item>
+        <item name="android:padding">@dimen/padding_normal_TextView</item>
     </style>
 
     <style name="bigText">

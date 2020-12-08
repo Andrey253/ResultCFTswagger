@@ -29,27 +29,25 @@ private const val ARG_PARAM1 = "param1"
 
 class Loans : Fragment() {
 
-    private val api = Client.apiService
-    private var sharedPref: SharedPreferences? = null
     lateinit var mLoanItemFragment: LoanItem
     lateinit var myAdapter: Adapter
-    private var listLoan = listOf<Loan>()
-    private var param1: String? = null
 
+    private var sharedPref: SharedPreferences? = null
+    var listLoan = listOf<Loan>()
+    private var param1: String? = null
     private var presenter: LoansPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.e("mytag", "onCreate Loans : Fragment()  ")
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
         }
-        sharedPref = context?.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        mLoanItemFragment = LoanItem()
+        sharedPref = context?.getSharedPreferences(ActivityLoans.PREFS_NAME, Context.MODE_PRIVATE)
+
+        presenter?.getAllLoans(context!!,  getString(R.string.no_connection))
     }
 
-    fun err(){
-        Toast.makeText(context,"Сервер не отвечал 10 секунд, повторите попытку позже", Toast.LENGTH_LONG).show()
-    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,22 +57,19 @@ class Loans : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        mLoanItemFragment = LoanItem()
+        recycleViewCreate(listLoan)
+        Log.e("mytag", "onActivityCreated Loans : Fragment()  ")
+        btn_req_loan_cond.setOnClickListener {presenter?.showCreateNewLoan() }
 
-        btn_req_loan_cond.setOnClickListener {
-
-            presenter?.showCreateNewLoan()
-        }
-        fab.setOnClickListener {context?.let {  presenter?.getAllLoans(context!!,"", "", getString(R.string.no_connection)) }}
-            recycleViewCreate(listLoan)
-            presenter?.getAllLoans(context!!, "", "", getString(R.string.no_connection))
-
-
+        fab.setOnClickListener {context?.let {  presenter?.getAllLoans(context!!, getString(R.string.no_connection)) }}
+        myAdapter.update(listLoan)
     }
+
     fun recycleViewCreate(listLoan: List<Loan>) {
         recyclerview.layoutManager = LinearLayoutManager(context)
         myAdapter = Adapter(listLoan, object : Adapter.Callback {
             override fun onItemClicked(item: Loan) {
-
                 presenter?.showItemLoan(item)
             }
         })
@@ -90,8 +85,5 @@ class Loans : Fragment() {
                     putString(ARG_PARAM1, param1)
                 }
             }
-            const val PREFS_NAME = "Bearer"
-            const val KEY_NAME = "Bearer"
-            const val ACCEPT ="*/*"
     }
 }

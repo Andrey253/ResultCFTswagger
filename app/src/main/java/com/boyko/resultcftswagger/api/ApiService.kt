@@ -2,6 +2,7 @@ package com.boyko.resultcftswagger.api
 
 import com.boyko.resultcftswagger.models.*
 import io.reactivex.Observable
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -13,12 +14,12 @@ interface ApiService {
     fun postLogin(
             @Header ("accept") accept: String,
             @Header ("Content-Type") type: String,
-            @Body user: LoggedInUser): Call<String>
+            @Body user: LoggedInUser): Observable<String>
     @POST("/registration")
     fun postReg(
             @Header ("accept") accept: String,
             @Header ("Content-Type") type: String,
-            @Body user: LoggedInUser): Call<UserEntity>
+            @Body user: LoggedInUser): Observable<UserEntity>
     @POST("/loans")
     fun postGetLoans(
             @Header ("accept") accept: String,

@@ -48,7 +48,10 @@ class CreatedNewLoan : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val btn = view?.findViewById<Button>(R.id.btn_to_main)
-        btn?.setOnClickListener {presenter?.clickToMain()}
+        btn?.setOnClickListener {
+            presenter?.getAllLoans(context!!, getString(R.string.no_connection))
+            presenter?.clickToMain()
+        }
     }
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
