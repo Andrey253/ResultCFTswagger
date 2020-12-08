@@ -39,7 +39,9 @@
         android:layout_gravity="fill"
         style="@style/normalText"
         android:gravity="left"
-        android:text="Статус"/>
+        android:text="@string/status"/>
+
+
 
     <TextView
         android:id="@+id/tv_item_state"
@@ -49,6 +51,14 @@
         style="@style/normalText"
         android:gravity="left"
         android:text="Статус" />
+
+            <View
+                android:id="@+id/divider1"
+                android:layout_columnWeight="2"
+                android:layout_columnSpan="2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
 
     <TextView
         android:id="@+id/tv_item_id1"
@@ -67,6 +77,13 @@
         style="@style/normalText"
         android:gravity="left"
         android:text="номер займа"/>
+            <View
+                android:id="@+id/divider2"
+                android:layout_columnWeight="2"
+                android:layout_columnSpan="2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
     <TextView
         android:id="@+id/tv_item_name1"
         android:layout_columnWeight="1"
@@ -84,6 +101,13 @@
         style="@style/normalText"
         android:gravity="left"
         android:text="Имя заказчика" />
+            <View
+                android:id="@+id/divider3"
+                android:layout_columnWeight="2"
+                android:layout_columnSpan="2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
     <TextView
         android:id="@+id/tv_item_phone1"
         android:layout_columnWeight="1"
@@ -101,6 +125,13 @@
         android:layout_gravity="fill"
         android:gravity="left"
         android:text="Телефон"/>
+            <View
+                android:id="@+id/divider4"
+                android:layout_columnWeight="2"
+                android:layout_columnSpan="2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
     <TextView
         android:id="@+id/tv_item_amount1"
         android:layout_columnWeight="1"
@@ -118,6 +149,13 @@
         android:layout_gravity="fill"
         android:gravity="left"
         android:text="Сумма"/>
+            <View
+                android:id="@+id/divider5"
+                android:layout_columnWeight="2"
+                android:layout_columnSpan="2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
     <TextView
         android:id="@+id/tv_item_percent1"
         android:layout_columnWeight="1"
@@ -135,6 +173,13 @@
         android:layout_gravity="fill"
         android:gravity="left"
         android:text="Процент, годовых"/>
+            <View
+                android:id="@+id/divider6"
+                android:layout_columnWeight="2"
+                android:layout_columnSpan="2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
     <TextView
         android:id="@+id/tv_item_period1"
         android:layout_columnWeight="1"
@@ -152,6 +197,13 @@
         android:layout_gravity="fill"
         android:gravity="left"
         android:text="Период, месяцев" />
+            <View
+                android:id="@+id/divider7"
+                android:layout_columnWeight="2"
+                android:layout_columnSpan="2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
         </GridLayout>
     </LinearLayout>
 
@@ -161,9 +213,10 @@
         android:gravity="center">
         <TextView
             android:id="@+id/tv_item_instruction"
-            style="@style/normalText"
+            style="@style/bigText"
             android:gravity="center"
             android:text="@string/if_loan_registred" />
 
     </LinearLayout>
+
 </LinearLayout>

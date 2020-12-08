@@ -32,7 +32,7 @@ class Login : Fragment() {
 
         btnLogin.setOnClickListener{
             loginRepository?.let {
-                presenterF?.clickLogin(context!!, intent, activity as LoginActivity, userCreate(), it, getString(R.string.authorization_successful), getString(R.string.error_login)) }
+                presenterF?.onLoginButtonClicked(context!!, intent, activity as LoginActivity, userCreate(), it, getString(R.string.authorization_successful), getString(R.string.error_login)) }
         }
 
         btnReg.setOnClickListener{

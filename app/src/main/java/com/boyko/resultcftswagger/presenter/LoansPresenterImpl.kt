@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager
 import com.boyko.resultcftswagger.ActivityLoans
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.api.Client
+import com.boyko.resultcftswagger.errors.ErrorsMake
 import com.boyko.resultcftswagger.models.Loan
 import com.boyko.resultcftswagger.models.LoanConditions
 import com.boyko.resultcftswagger.models.LoanRequest
@@ -33,6 +34,7 @@ class LoansPresenterImpl(private val loginRepository: LoginRepository, val fragm
     private var mLoans              : Loans? = null
     private var viewLoanItem        : LoanItem? = null
     private var viewCreateNewLoan   : CreateNewLoan? = null
+    private var errors = ErrorsMake()
 
 
     private val api = Client.apiService
@@ -45,6 +47,13 @@ class LoansPresenterImpl(private val loginRepository: LoginRepository, val fragm
         this.mLoans             = viewLoans
        // this.viewLoanItem       = viewLoanItem
         this.viewCreateNewLoan  = viewCreateNewLoan
+    }
+    private fun sendErrors(context: Context, e: String) {
+        val mainHandler = android.os.Handler(context.mainLooper)
+        val runnable = Runnable {
+            Toast.makeText(context, e,Toast.LENGTH_LONG).show()
+        }
+        mainHandler.post(runnable)
     }
 
     override fun detachView() {
@@ -85,11 +94,13 @@ class LoansPresenterImpl(private val loginRepository: LoginRepository, val fragm
     }
 
     override fun getAllLoans(context: Context, toast: String) {
-        Log.e("mytag", "getAllLoans")
+
         if (isConnect(context)){
             val sharedPref = context.getSharedPreferences(ActivityLoans.PREFS_NAME, Context.MODE_PRIVATE)
             val bearer: String? = sharedPref?.getString(ActivityLoans.KEY_NAME, null)
             bearer?.let {
+                Log.e("mytag getAllLoans", Thread.currentThread().name.toString())
+
                if( mLoans != null) mLoans?.progressBar?.setVisibility(View.VISIBLE)
                 val call = api.getLoansAll(ActivityLoans.ACCEPT, it)
                 call
@@ -108,7 +119,8 @@ class LoansPresenterImpl(private val loginRepository: LoginRepository, val fragm
 
                             override fun onError(e: Throwable) {
                                 if( mLoans != null) mLoans?.progressBar?.setVisibility(View.INVISIBLE)
-
+                                sendErrors(context, errors.errorToString(e.message.toString()))
+                                Log.e("mytag getAllLoans", e.message.toString())
                             }
 
                             override fun onComplete() {

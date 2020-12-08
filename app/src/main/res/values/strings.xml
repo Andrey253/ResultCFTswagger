@@ -44,4 +44,10 @@
     <string name="registeration">регистрация</string>
     <string name="action_darck">Темная тема</string>
     <string name="action_light">Светлая тема</string>
+    <string name="btn_login">Вход</string>
+    <string name="enter_password_repeat">enter password repeat</string>
+    <string name="enter_password">enter password</string>
+    <string name="enter_your_email">enter your email</string>
+    <string name="form_register">Form register</string>
+    <string name="status">Статус</string>
 </resources>

@@ -10,7 +10,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Form register"
+        android:text="@string/form_register"
         android:textColor="#81D4FA"
         android:textSize="30sp"
         android:layout_alignParentTop="true"
@@ -22,8 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView"
-        android:drawableLeft="@drawable/img_taikhoan"
-        android:hint="enter your email"
+        android:drawableStart="@drawable/img_taikhoan"
+        android:hint="@string/enter_your_email"
         style="@style/edit_login"/>
 
     <EditText
@@ -31,8 +31,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/editText_user_reg"
-        android:drawableLeft="@drawable/img_matkhau"
-        android:hint="enter password"
+        android:drawableStart="@drawable/img_matkhau"
+        android:hint="@string/enter_password"
         android:inputType="textPassword"
         style="@style/edit_login"/>
 
@@ -41,19 +41,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/editText_password_reg"
-        android:drawableLeft="@drawable/img_matkhau2"
-        android:hint="enter password repeat"
+        android:drawableStart="@drawable/img_matkhau2"
+        android:hint="@string/enter_password_repeat"
         android:inputType="textPassword"
-        style="@style/edit_login"/>
+        style="@style/edit_login"
+        android:autofillHints="123456" />
     <Button
         android:id="@+id/btn_reg_register"
-        android:text="registeration"
+        android:text="@string/registeration"
         android:layout_below="@+id/editText_password_repeat"
         android:background="@drawable/bg_button"
         style="@style/Buttons" />
     <Button
         android:id="@+id/btn_reg_login"
-        android:text="login"
+        android:text="@string/btn_login"
         android:layout_below="@+id/btn_reg_register"
         android:background="@drawable/bg_button"
         style="@style/Buttons" />

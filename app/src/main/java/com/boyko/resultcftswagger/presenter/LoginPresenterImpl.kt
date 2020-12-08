@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Looper
+import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -29,17 +30,17 @@ class LoginPresenterImpl(private val loginRepository: LoginRepository, private v
     private var mLogin : Login? = null
     private var mRegis : Register? = null
     private var mLoginActivity : LoginActivity? = null
-    private var errors =ErrorsMake()
+    private var errors = ErrorsMake()
     private val api = Client.apiService
 
     override fun attachView(
-            viewLogin: Login,
-            viewRegis: Register,
-            loginActivity: LoginActivity
+            l : Login,
+            r : Register,
+            la: LoginActivity
     ) {
-        this.mLogin         = viewLogin
-        this.mRegis         = viewRegis
-        this.mLoginActivity = loginActivity
+        this.mLogin         = l
+        this.mRegis         = r
+        this.mLoginActivity = la
     }
 
     override fun detachView() {
@@ -48,12 +49,7 @@ class LoginPresenterImpl(private val loginRepository: LoginRepository, private v
         this.mLoginActivity= null
     }
 
-
-    override fun onLoginButtonClicked(username: String, password: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun clickLogin(
+    override fun onLoginButtonClicked(
             context: Context,
             intent: Intent,
             activity: Activity,
@@ -64,7 +60,7 @@ class LoginPresenterImpl(private val loginRepository: LoginRepository, private v
         api.postLogin(ACCEPT, CONTENTTYPE, userLoggedInUser)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .timeout(10, TimeUnit.SECONDS)
+                .timeout(7, TimeUnit.SECONDS)
                 .subscribe(object : Observer<String> {
                     override fun onSubscribe(d: Disposable) {
                     }
@@ -97,19 +93,20 @@ class LoginPresenterImpl(private val loginRepository: LoginRepository, private v
         api.postReg(ACCEPT, CONTENTTYPE, userLoggedInUser)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .timeout(3, TimeUnit.SECONDS)
+                .timeout(7, TimeUnit.SECONDS)
                 .subscribe(object : Observer<UserEntity> {
                     override fun onSubscribe(d: Disposable) {
                     }
 
                     override fun onNext(userEntity: UserEntity) {
                         Toast.makeText(context, userEntity.name + s1, Toast.LENGTH_LONG).show()
-                        clickLogin(context, intent, activity, userLoggedInUser, loginRepository, s1, s2)
+                        onLoginButtonClicked(context, intent, activity, userLoggedInUser, loginRepository, s1, s2)
                     }
 
                     override fun onError(e: Throwable) {
-                        //mLogin?.let { showFragment_right(it) }
-                        //mRegis?.toast()
+                        sendErrors(context, errors.errorToString(e.message.toString()))
+                        //Log.e("mytag", e.message.toString())
+                        //Toast.makeText(context, errors.errorToString(e.message.toString()),Toast.LENGTH_LONG).show()
                     }
 
                     override fun onComplete() {

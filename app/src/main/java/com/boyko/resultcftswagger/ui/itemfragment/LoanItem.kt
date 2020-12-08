@@ -77,20 +77,34 @@ class LoanItem : Fragment() {
     private fun setColorStatus(state: String?) {
         when (state) {
             REGISTERED -> {
-                tv_item_state.setBackgroundColor(Color.CYAN)
-                tv_item_state1.setBackgroundColor(Color.CYAN)
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    context?.getColor(R.color.item_loan_bg_registred)?.let {
+                        tv_item_state.setBackgroundColor(it)
+                        tv_item_state1.setBackgroundColor(it)
+                    }
+                }
+
                 tv_item_state.text = getString(R.string.status_REGISTRED)
                 tv_item_instruction.text = getString(R.string.if_loan_registred)
             }
             APPROVED -> {
-                tv_item_state.setBackgroundColor(Color.GREEN)
-                tv_item_state1.setBackgroundColor(Color.GREEN)
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    context?.getColor(R.color.item_loan_bg_aproved)?.let {
+                        tv_item_state.setBackgroundColor(it)
+                        tv_item_state1.setBackgroundColor(it)
+                    }
+                }
+
                 tv_item_state.text = getString(R.string.status_APPROVED)
                 tv_item_instruction.text = getString(R.string.if_loan_aproved)
             }
             REJECTED -> {
-                tv_item_state.setBackgroundColor(Color.RED)
-                tv_item_state1.setBackgroundColor(Color.RED)
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    context?.getColor(R.color.item_loan_bg_rejected)?.let {
+                        tv_item_state.setBackgroundColor(it)
+                        tv_item_state1.setBackgroundColor(it)
+                    }
+                }
                 tv_item_state.text = getString(R.string.status_REJECTED)
                 tv_item_instruction.text = getString(R.string.if_loan_rejected)
             }

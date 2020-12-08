@@ -15,12 +15,10 @@ interface LoginPresenter {
 
     fun detachView()
 
-    fun onLoginButtonClicked(username: String, password: String)
-
     fun onLoginDataUpdated(username: String, password: String, passwordrepeat: String)
 
     //login fragment
-    fun clickLogin(context: Context, intent: Intent, activity: Activity, userLoggedInUser: LoggedInUser, loginRepository: LoginRepository, s1: String, s2:String)
+    fun onLoginButtonClicked(context: Context, intent: Intent, activity: Activity, userLoggedInUser: LoggedInUser, loginRepository: LoginRepository, s1: String, s2:String)
 
     fun clickToRegistration()
 

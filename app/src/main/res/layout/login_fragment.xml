@@ -42,7 +42,7 @@
 
     <Button
         android:id="@+id/btn_login"
-        android:text="login"
+        android:text="@string/btn_login"
         android:layout_below="@+id/editText_password"
         android:background="@drawable/bg_button"
         style="@style/Buttons" />
