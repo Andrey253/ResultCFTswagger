@@ -32,15 +32,13 @@ class Register : Fragment() {
         val btnLogin = view.findViewById<Button>(R.id.btn_reg_login)
         val btn_reg_register = view.findViewById<Button>(R.id.btn_reg_register)
 
-        val loginRepository = context?.let { LoginRepository(it) }
         val intent = Intent(context, ActivityLoans::class.java)
 
         btnLogin.setOnClickListener{
             presenterF?.clickToLogin()
         }
         btn_reg_register.setOnClickListener {
-            loginRepository?.let {
-                presenterF?.clickRegistration(context!!, intent, activity as LoginActivity, userForReg(), it, getString(R.string.registration_successful), (getString(R.string.user_already_exist)))}
+            presenterF?.clickRegistration(context!!, intent, activity as LoginActivity, userForReg(),getString(R.string.registration_successful), (getString(R.string.user_already_exist)))
         }
         return view
     }

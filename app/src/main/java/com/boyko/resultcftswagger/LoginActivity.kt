@@ -16,7 +16,6 @@ import com.boyko.resultcftswagger.ActivityLoans as ActivityLoa
 class LoginActivity: AppCompatActivity(), LoginView{
 
     private val presenter by lazy {  LoginPresenterFactory.create(applicationContext, supportFragmentManager) }
-
     private val mLogin by lazy {  Login   .newInstance("", presenter!!) }
     private val mRegis by lazy {  Register.newInstance("", presenter!!) }
 
@@ -37,8 +36,7 @@ class LoginActivity: AppCompatActivity(), LoginView{
     }
 
     private fun initPresenter() {
-
-        presenter?.attachView(mLogin, mRegis, this)
+        presenter.attachView(mLogin, mRegis, this)
     }
 
     override fun onBackPressed() {

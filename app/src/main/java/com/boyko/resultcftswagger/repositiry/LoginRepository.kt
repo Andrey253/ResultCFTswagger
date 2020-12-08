@@ -10,6 +10,11 @@ class LoginRepository (val context: Context){
         return sharedPref?.contains(ActivityLoans.KEY_NAME) == true
     }
 
+    fun getBearer(): String? {
+        val sharedPref = context.getSharedPreferences(ActivityLoans.PREFS_NAME, Context.MODE_PRIVATE)
+        return sharedPref?.getString(ActivityLoans.KEY_NAME, null)
+    }
+
     fun logOut() {
         val sharedPref = context.getSharedPreferences(ActivityLoans.PREFS_NAME, Context.MODE_PRIVATE)
         sharedPref?.edit()?.remove(ActivityLoans.KEY_NAME)?.apply()

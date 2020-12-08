@@ -96,47 +96,39 @@ class LoansPresenterImpl(private val loginRepository: LoginRepository, val fragm
     override fun getAllLoans(context: Context, toast: String) {
 
         if (isConnect(context)){
-            val sharedPref = context.getSharedPreferences(ActivityLoans.PREFS_NAME, Context.MODE_PRIVATE)
-            val bearer: String? = sharedPref?.getString(ActivityLoans.KEY_NAME, null)
-            bearer?.let {
-                Log.e("mytag getAllLoans", Thread.currentThread().name.toString())
-
-               if( mLoans != null) mLoans?.progressBar?.setVisibility(View.VISIBLE)
+            loginRepository.getBearer()?.let {
+                mLoans?.progressBar?.setVisibility(View.VISIBLE)
                 val call = api.getLoansAll(ActivityLoans.ACCEPT, it)
-                call
-                        .observeOn(AndroidSchedulers.mainThread())
+                call.observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
                         .timeout(7, TimeUnit.SECONDS)
                         .subscribe(object : Observer<List<Loan>> {
-                            override fun onSubscribe(d: Disposable) {
-                             }
-
-                            override fun onNext(listLoanCall: List<Loan>) {
-                                if( mLoans != null) mLoans?.progressBar?.setVisibility(View.INVISIBLE)
+                            override fun onSubscribe(d: Disposable) { }
+                            override fun onNext(listLoanCall: List<Loan>)
+                            {
+                                if (mLoans != null) mLoans?.progressBar?.setVisibility(View.INVISIBLE)
                                 mLoans?.listLoan = listLoanCall
                                 mLoans?.myAdapter?.update(listLoanCall)
                             }
 
-                            override fun onError(e: Throwable) {
-                                if( mLoans != null) mLoans?.progressBar?.setVisibility(View.INVISIBLE)
+                            override fun onError(e: Throwable)
+                            {
+                                if (mLoans != null) mLoans?.progressBar?.setVisibility(View.INVISIBLE)
                                 sendErrors(context, errors.errorToString(e.message.toString()))
                                 Log.e("mytag getAllLoans", e.message.toString())
                             }
 
-                            override fun onComplete() {
-                            }
+                            override fun onComplete() {}
                         })
             }
         } else {
-            if( mLoans != null) mLoans?.progressBar?.setVisibility(View.INVISIBLE)
+            if (mLoans != null) mLoans?.progressBar?.setVisibility(View.INVISIBLE)
             Toast.makeText(context, toast, Toast.LENGTH_LONG).show()
         }
     }
     override fun loanConditionsRequest(context: Context, toast: String) {
         if (isConnect(context)) {
-            val sharedPref = context.getSharedPreferences(ActivityLoans.PREFS_NAME, Context.MODE_PRIVATE)
-            val bearer: String? = sharedPref?.getString(ActivityLoans.KEY_NAME, null)
-            bearer?.let {
+            loginRepository.getBearer()?.let {
                 val call = api.getLoansConditions(ActivityLoans.ACCEPT, it)
                 call
                         .observeOn(AndroidSchedulers.mainThread())
@@ -168,9 +160,7 @@ class LoansPresenterImpl(private val loginRepository: LoginRepository, val fragm
     }
     override fun loanRequest(context: Context, loanRequest: LoanRequest, presenter: LoansPresenter, toast: String) {
         if (isConnect(context)) {
-            val sharedPref = context.getSharedPreferences(ActivityLoans.PREFS_NAME, Context.MODE_PRIVATE)
-            val bearer: String? = sharedPref?.getString(ActivityLoans.KEY_NAME, null)
-            bearer?.let {
+            loginRepository.getBearer()?.let {
                 val call = api.postGetLoans(ActivityLoans.ACCEPT, it, loanRequest)
                 call
                         .observeOn(AndroidSchedulers.mainThread())

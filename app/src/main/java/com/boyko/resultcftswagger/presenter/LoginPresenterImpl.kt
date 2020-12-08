@@ -51,10 +51,9 @@ class LoginPresenterImpl(private val loginRepository: LoginRepository, private v
 
     override fun onLoginButtonClicked(
             context: Context,
-            intent: Intent,
-            activity: Activity,
+            intentToStart: Intent,
+            activityToFinish: Activity,
             userLoggedInUser: LoggedInUser,
-            loginRepository: LoginRepository,
             s1: String, s2: String) {
 
         api.postLogin(ACCEPT, CONTENTTYPE, userLoggedInUser)
@@ -67,8 +66,8 @@ class LoginPresenterImpl(private val loginRepository: LoginRepository, private v
 
                     override fun onNext(authKey: String) {
                         loginRepository.authorization(authKey)
-                        context.startActivity(intent)
-                        activity.finish()
+                        context.startActivity(intentToStart)
+                        activityToFinish.finish()
                         Toast.makeText(context, (userLoggedInUser.name + s1), Toast.LENGTH_LONG).show()
                     }
 
@@ -89,7 +88,7 @@ class LoginPresenterImpl(private val loginRepository: LoginRepository, private v
         mainHandler.post(runnable)
     }
 
-    override fun clickRegistration(context: Context, intent: Intent, activity: Activity, userLoggedInUser: LoggedInUser, loginRepository: LoginRepository, s1: String, s2: String) {
+    override fun clickRegistration(context: Context, intent: Intent, activity: Activity, userLoggedInUser: LoggedInUser, s1: String, s2: String) {
         api.postReg(ACCEPT, CONTENTTYPE, userLoggedInUser)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -100,7 +99,7 @@ class LoginPresenterImpl(private val loginRepository: LoginRepository, private v
 
                     override fun onNext(userEntity: UserEntity) {
                         Toast.makeText(context, userEntity.name + s1, Toast.LENGTH_LONG).show()
-                        onLoginButtonClicked(context, intent, activity, userLoggedInUser, loginRepository, s1, s2)
+                        onLoginButtonClicked(context, intent, activity, userLoggedInUser, s1, s2)
                     }
 
                     override fun onError(e: Throwable) {

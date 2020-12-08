@@ -27,12 +27,10 @@ class Login : Fragment() {
         val view:View=inflater.inflate(R.layout.login_fragment,container,false)
         val btnLogin = view.findViewById<Button>(R.id.btn_login)
         val btnReg = view.findViewById<Button>(R.id.btn_register)
-        val loginRepository = context?.let { LoginRepository(it) }
         val intent = Intent(context, ActivityLoans::class.java)
 
         btnLogin.setOnClickListener{
-            loginRepository?.let {
-                presenterF?.onLoginButtonClicked(context!!, intent, activity as LoginActivity, userCreate(), it, getString(R.string.authorization_successful), getString(R.string.error_login)) }
+            presenterF?.onLoginButtonClicked(context!!, intent, activity as LoginActivity, userCreate(), getString(R.string.authorization_successful), getString(R.string.error_login))
         }
 
         btnReg.setOnClickListener{

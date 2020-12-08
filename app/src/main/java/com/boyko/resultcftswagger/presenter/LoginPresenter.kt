@@ -18,12 +18,12 @@ interface LoginPresenter {
     fun onLoginDataUpdated(username: String, password: String, passwordrepeat: String)
 
     //login fragment
-    fun onLoginButtonClicked(context: Context, intent: Intent, activity: Activity, userLoggedInUser: LoggedInUser, loginRepository: LoginRepository, s1: String, s2:String)
+    fun onLoginButtonClicked(context: Context, intent: Intent, activity: Activity, userLoggedInUser: LoggedInUser, s1: String, s2:String)
 
     fun clickToRegistration()
 
     //regestration fragment
-    fun clickRegistration(context: Context, intent: Intent, activity: Activity, userLoggedInUser: LoggedInUser, loginRepository: LoginRepository, s1: String, s2:String)
+    fun clickRegistration(context: Context, intent: Intent, activity: Activity, userLoggedInUser: LoggedInUser, s1: String, s2:String)
 
     fun clickToLogin()
 

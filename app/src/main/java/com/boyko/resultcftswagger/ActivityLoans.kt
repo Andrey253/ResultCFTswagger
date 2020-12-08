@@ -22,11 +22,11 @@ const val THEME_DARK = 1
 
 class ActivityLoans : AppCompatActivity() {
 
+    private val mLoans          by lazy {  Loans        .newInstance("", presenter!!) }
+    private val mCreateNewLoan  by lazy {  CreateNewLoan.newInstance("", presenter!!) }
     private var loginRepository : LoginRepository? = null
     private var presenter       : LoansPresenter? = null
 
-    private lateinit var mLoans         : Loans
-    private lateinit var mCreateNewLoan : CreateNewLoan
 
     private val sharedPrefs by lazy {  getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
 
@@ -45,8 +45,6 @@ class ActivityLoans : AppCompatActivity() {
 
         presenter = LoansPresenterFactory.create(applicationContext, supportFragmentManager)
 
-        mLoans         = Loans.newInstance          ("", presenter!!)
-        mCreateNewLoan = CreateNewLoan.newInstance  ("", presenter!!)
 
         presenter?.attachView(mLoans, mCreateNewLoan)
 
@@ -55,7 +53,10 @@ class ActivityLoans : AppCompatActivity() {
     override fun onBackPressed() {
         when (supportFragmentManager.findFragmentById(R.id.main_loans_container)) {
             is Loans -> finish()
-            is CreatedNewLoan -> {presenter?.showFragmentRight(mLoans)}
+            is CreatedNewLoan -> {
+                presenter?.showFragmentRight(mLoans)
+                presenter?.getAllLoans(applicationContext, getString(R.string.no_connection))
+            }
             is CreateNewLoan -> {presenter?.showFragmentRight(mLoans)}
             is LoanItem ->      {presenter?.showFragmentRight(mLoans)}
             else -> super.onBackPressed()

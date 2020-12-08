@@ -36,6 +36,7 @@ class Loans : Fragment() {
     var listLoan = listOf<Loan>()
     private var param1: String? = null
     private var presenter: LoansPresenter? = null
+    private var onCreated = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +46,8 @@ class Loans : Fragment() {
         }
         sharedPref = context?.getSharedPreferences(ActivityLoans.PREFS_NAME, Context.MODE_PRIVATE)
 
-        presenter?.getAllLoans(context!!,  getString(R.string.no_connection))
+        onCreated = true
+
     }
 
     override fun onCreateView(
@@ -57,6 +59,10 @@ class Loans : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        if (onCreated){
+            presenter?.getAllLoans(context!!,  getString(R.string.no_connection))
+            onCreated =false
+        }
         mLoanItemFragment = LoanItem()
         recycleViewCreate(listLoan)
         Log.e("mytag", "onActivityCreated Loans : Fragment()  ")

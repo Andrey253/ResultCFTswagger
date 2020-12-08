@@ -52,13 +52,6 @@
         android:gravity="left"
         android:text="Статус" />
 
-            <View
-                android:id="@+id/divider1"
-                android:layout_columnWeight="2"
-                android:layout_columnSpan="2"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="?android:attr/listDivider" />
 
     <TextView
         android:id="@+id/tv_item_id1"
@@ -79,11 +72,11 @@
         android:text="номер займа"/>
             <View
                 android:id="@+id/divider2"
-                android:layout_columnWeight="2"
+                android:layout_columnWeight="1"
                 android:layout_columnSpan="2"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="?android:attr/listDivider" />
+                android:layout_height="1dp"
+                android:background="@color/black"/>
     <TextView
         android:id="@+id/tv_item_name1"
         android:layout_columnWeight="1"
@@ -106,8 +99,8 @@
                 android:layout_columnWeight="2"
                 android:layout_columnSpan="2"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="?android:attr/listDivider" />
+                android:layout_height="1dp"
+                android:background="@color/black"/>
     <TextView
         android:id="@+id/tv_item_phone1"
         android:layout_columnWeight="1"
@@ -130,8 +123,8 @@
                 android:layout_columnWeight="2"
                 android:layout_columnSpan="2"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="?android:attr/listDivider" />
+                android:layout_height="1dp"
+                android:background="@color/black"/>
     <TextView
         android:id="@+id/tv_item_amount1"
         android:layout_columnWeight="1"
@@ -154,8 +147,8 @@
                 android:layout_columnWeight="2"
                 android:layout_columnSpan="2"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="?android:attr/listDivider" />
+                android:layout_height="1dp"
+                android:background="@color/black"/>
     <TextView
         android:id="@+id/tv_item_percent1"
         android:layout_columnWeight="1"
@@ -178,8 +171,8 @@
                 android:layout_columnWeight="2"
                 android:layout_columnSpan="2"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="?android:attr/listDivider" />
+                android:layout_height="1dp"
+                android:background="@color/black"/>
     <TextView
         android:id="@+id/tv_item_period1"
         android:layout_columnWeight="1"
@@ -202,8 +195,8 @@
                 android:layout_columnWeight="2"
                 android:layout_columnSpan="2"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="?android:attr/listDivider" />
+                android:layout_height="1dp"
+                android:background="@color/black"/>
         </GridLayout>
     </LinearLayout>
 
