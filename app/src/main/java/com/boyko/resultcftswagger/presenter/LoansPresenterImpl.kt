@@ -3,7 +3,6 @@ package com.boyko.resultcftswagger.presenter
 import android.content.Context
 import android.util.Log
 import android.view.View
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -25,9 +24,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.loans_fragment.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.util.concurrent.TimeUnit
 
 

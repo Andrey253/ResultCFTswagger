@@ -2,25 +2,24 @@ package com.boyko.resultcftswagger
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.widget.EditText
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.di.LoginPresenterFactory
-import com.boyko.resultcftswagger.presenter.LoginPresenter
 import com.boyko.resultcftswagger.presenter.LoginView
 import com.boyko.resultcftswagger.repositiry.LoginRepository
 import com.boyko.resultcftswagger.ui.*
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.registr_fragment.*
 import com.boyko.resultcftswagger.ActivityLoans as ActivityLoa
 
 class LoginActivity: AppCompatActivity(), LoginView{
 
-    private var presenter: LoginPresenter? = null
-    lateinit var mLogin: Login
-    lateinit var mRegis: Register
+    private val presenter by lazy {  LoginPresenterFactory.create(applicationContext, supportFragmentManager) }
+
+    private val mLogin by lazy {  Login   .newInstance("", presenter!!) }
+    private val mRegis by lazy {  Register.newInstance("", presenter!!) }
+
     lateinit var loginRepository: LoginRepository
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,9 +37,7 @@ class LoginActivity: AppCompatActivity(), LoginView{
     }
 
     private fun initPresenter() {
-        presenter = LoginPresenterFactory.create(applicationContext, supportFragmentManager)
-        mLogin    = Login.newInstance( "", presenter!!)
-        mRegis    = Register.newInstance( "", presenter!!)
+
         presenter?.attachView(mLogin, mRegis, this)
     }
 
@@ -69,7 +66,7 @@ class LoginActivity: AppCompatActivity(), LoginView{
         supportFragmentManager.beginTransaction()
             .addToBackStack(null)
             .setCustomAnimations(R.anim.left_in, R.anim.left_out)
-            .replace(R.id.main_container,fragment, fragment.javaClass.name)
+            .replace(R.id.main_container, fragment, fragment.javaClass.name)
             .commit()
     }
 }

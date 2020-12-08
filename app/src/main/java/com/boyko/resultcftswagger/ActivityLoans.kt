@@ -1,18 +1,13 @@
 package com.boyko.resultcftswagger
 
-import android.content.ClipData
 import android.content.Context
 import android.content.res.Configuration
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.Button
 import androidx.appcompat.app.AppCompatDelegate
-import com.boyko.resultcftswagger.api.Client
 import com.boyko.resultcftswagger.di.LoansPresenterFactory
 import com.boyko.resultcftswagger.presenter.LoansPresenter
 import com.boyko.resultcftswagger.repositiry.LoginRepository

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.boyko.resultcftswagger.ActivityLoans
 import com.boyko.resultcftswagger.LoginActivity
@@ -16,6 +17,7 @@ import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.models.LoggedInUser
 import com.boyko.resultcftswagger.presenter.LoginPresenter
 import com.boyko.resultcftswagger.repositiry.LoginRepository
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.registr_fragment.*
 
 private const val ARG_PARAM1 = "param1"
@@ -61,6 +63,10 @@ class Register : Fragment() {
                 }
             }
     }
+//
+//    fun toast(){
+//        Toast.makeText(context, "er.get(e.message.toString())", Toast.LENGTH_LONG).show()
+//    }
     fun showUsernameError() {
         editText_user_reg.error = getString(R.string.invalid_username)
     }

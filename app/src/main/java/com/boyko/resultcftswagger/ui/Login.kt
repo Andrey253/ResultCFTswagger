@@ -2,22 +2,21 @@ package com.boyko.resultcftswagger.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
-import android.util.LogPrinter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.boyko.resultcftswagger.ActivityLoans
 import com.boyko.resultcftswagger.LoginActivity
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.models.LoggedInUser
-import com.boyko.resultcftswagger.presenter.LoansPresenter
 import com.boyko.resultcftswagger.presenter.LoginPresenter
 import com.boyko.resultcftswagger.repositiry.LoginRepository
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.login_fragment.*
-import kotlinx.android.synthetic.main.registr_fragment.*
 private const val ARG_PARAM1 = "param1"
 
 class Login : Fragment() {

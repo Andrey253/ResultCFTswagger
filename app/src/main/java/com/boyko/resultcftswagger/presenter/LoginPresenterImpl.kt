@@ -3,6 +3,7 @@ package com.boyko.resultcftswagger.presenter
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Looper
 import android.util.Patterns
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -10,6 +11,7 @@ import androidx.fragment.app.FragmentManager
 import com.boyko.resultcftswagger.LoginActivity
 import com.boyko.resultcftswagger.R
 import com.boyko.resultcftswagger.api.Client
+import com.boyko.resultcftswagger.errors.ErrorsMake
 import com.boyko.resultcftswagger.models.LoggedInUser
 import com.boyko.resultcftswagger.models.UserEntity
 import com.boyko.resultcftswagger.repositiry.LoginRepository
@@ -20,19 +22,21 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
+import java.util.logging.Handler
 
-class LoginPresenterImpl(private val loginRepository: LoginRepository, private val fManager: FragmentManager): LoginPresenter{
+class LoginPresenterImpl(private val loginRepository: LoginRepository, private val fManager: FragmentManager) : LoginPresenter {
 
     private var mLogin : Login? = null
     private var mRegis : Register? = null
     private var mLoginActivity : LoginActivity? = null
+    private var errors =ErrorsMake()
     private val api = Client.apiService
 
     override fun attachView(
-        viewLogin         : Login,
-        viewRegis         : Register,
-        loginActivity     : LoginActivity
-        ) {
+            viewLogin: Login,
+            viewRegis: Register,
+            loginActivity: LoginActivity
+    ) {
         this.mLogin         = viewLogin
         this.mRegis         = viewRegis
         this.mLoginActivity = loginActivity
@@ -55,12 +59,12 @@ class LoginPresenterImpl(private val loginRepository: LoginRepository, private v
             activity: Activity,
             userLoggedInUser: LoggedInUser,
             loginRepository: LoginRepository,
-            s1: String, s2:String) {
+            s1: String, s2: String) {
 
         api.postLogin(ACCEPT, CONTENTTYPE, userLoggedInUser)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .timeout(7, TimeUnit.SECONDS)
+                .timeout(10, TimeUnit.SECONDS)
                 .subscribe(object : Observer<String> {
                     override fun onSubscribe(d: Disposable) {
                     }
@@ -73,8 +77,7 @@ class LoginPresenterImpl(private val loginRepository: LoginRepository, private v
                     }
 
                     override fun onError(e: Throwable) {
-
-
+                        sendErrors(context, errors.errorToString(e.message.toString()))
                     }
 
                     override fun onComplete() {
@@ -82,22 +85,31 @@ class LoginPresenterImpl(private val loginRepository: LoginRepository, private v
                 })
     }
 
-    override fun clickRegistration(context: Context, intent: Intent, activity: Activity, userLoggedInUser: LoggedInUser, loginRepository: LoginRepository, s1: String, s2:String) {
+    private fun sendErrors(context: Context, e: String) {
+        val mainHandler = android.os.Handler(context.mainLooper)
+        val runnable = Runnable {
+            Toast.makeText(context, e,Toast.LENGTH_LONG).show()
+        }
+        mainHandler.post(runnable)
+    }
+
+    override fun clickRegistration(context: Context, intent: Intent, activity: Activity, userLoggedInUser: LoggedInUser, loginRepository: LoginRepository, s1: String, s2: String) {
         api.postReg(ACCEPT, CONTENTTYPE, userLoggedInUser)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .timeout(7, TimeUnit.SECONDS)
+                .timeout(3, TimeUnit.SECONDS)
                 .subscribe(object : Observer<UserEntity> {
                     override fun onSubscribe(d: Disposable) {
                     }
 
                     override fun onNext(userEntity: UserEntity) {
                         Toast.makeText(context, userEntity.name + s1, Toast.LENGTH_LONG).show()
-                         clickLogin(context, intent, activity, userLoggedInUser, loginRepository, s1, s2)
+                        clickLogin(context, intent, activity, userLoggedInUser, loginRepository, s1, s2)
                     }
 
                     override fun onError(e: Throwable) {
-                        Toast.makeText(context, s2, Toast.LENGTH_LONG).show()
+                        //mLogin?.let { showFragment_right(it) }
+                        //mRegis?.toast()
                     }
 
                     override fun onComplete() {
@@ -113,7 +125,7 @@ class LoginPresenterImpl(private val loginRepository: LoginRepository, private v
         fManager.beginTransaction()
             .addToBackStack(null)
             .setCustomAnimations(R.anim.right_in, R.anim.right_out)
-            .replace(R.id.main_container,fragment, fragment.javaClass.name)
+            .replace(R.id.main_container, fragment, fragment.javaClass.name)
             .commit()
     }
     override fun clickToRegistration() {
@@ -132,9 +144,9 @@ class LoginPresenterImpl(private val loginRepository: LoginRepository, private v
     }
 
     private fun handleLoginResult(
-        username: String,
-        password: String,
-        passwordrepeat: String
+            username: String,
+            password: String,
+            passwordrepeat: String
     ) {
         if (!isUserNameValid(username)) {
             mRegis?.showUsernameError()
